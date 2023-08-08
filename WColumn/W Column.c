@@ -16,6 +16,7 @@
         scanf("%c", &hold);
     }
     char **loadW(FILE* fp){
+        
     }
 
 int main(void){
