@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "llist.h"
+#include "dllist.h"
+//max W's 200
 #define MAXWS 200
-
+//max string size in chars
+#define MAXSTRSIZE 80
 
     //prompt user for the first time
     void introInstruct(){
