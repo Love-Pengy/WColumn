@@ -26,8 +26,8 @@ dllist initList(){
 
 dlNode createNode(char *str){
     if(strlen(str) == 0){
-        return(NULL);
         printf("CREATENODE PASSED EMPTY STRING\n");
+        return(NULL);
     }
     dlNode newNode = malloc(sizeof(struct node));
     newNode->data = malloc(sizeof(char)*80);
@@ -44,6 +44,10 @@ int listSize(dllist dl){
 //take string and header node and insert string into dllist at end
 dllist addList(char *str, dllist dl){
     //if there are no nodes create one and set it as head
+    if(strcmp(str, "") == 0){
+        printf("ADDLIST PASSED NULL STRING\n");
+        return(NULL);
+    }
     if(dl->size == 0){
         dl->head = createNode(str);
         dl->size = 1;
@@ -51,9 +55,11 @@ dllist addList(char *str, dllist dl){
     }
     //if there is just a head then create node and put it after the head
     else if(dl->size == 1){
+        //printf("here\n");
         dl->tail = createNode(str);
         dl->head->next = dl->tail;
         dl->tail->prev = dl->head;
+        dl->size++;
         return(dl);
     }
     //if dllist is already created then add node at the end like normal 
@@ -63,17 +69,19 @@ dllist addList(char *str, dllist dl){
         dl->tail = createNode(str);
         dl->tail->prev = tmp;
         tmp->next = dl->tail;
+        dl->size++;
         return(dl);
     }
 }
 
 void clearList(dllist d){
     if(d->size == 0){
-        free(d);
+        
     }
     else if(d->size == 1){
         free(d->head);
         d->head = NULL;
+        d->size = 0;
     }
     else{
         dlNode tmp;
