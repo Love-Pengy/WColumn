@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dllist.h"
+#include <stdbool.h>
 //max W's 200
 #define MAXWS 200
 //max string size in chars
@@ -17,15 +18,76 @@
         printf("~~Press any key to continue~~");
         scanf("%c", &hold);
     }
+    //check if user is a returning user (0 = false);
+    int checkReturnUser(){
+        char ans;
+        printf("Are you a returning user? (T/F)");
+        scanf("%c", &ans);
+        if((ans == 'T') || (ans == 't')){
+            return(1);
+        }
+        else{
+            return(0);
+        }
+        }
 
-    dllist loadWs(FILE* fp){
+    //get dir of W's
+    char *getDir(){
+        char *hold = malloc(sizeof(char) * 160);
+        printf("What is the Directory where your W's are held?\n");
+        scanf("%s", hold);
+        return(hold);
+    }
+    
+
+    dllist loadWs(FILE *fp){
        int size = 0;
        if(fp != NULL){
         fseek(fp, 0, SEEK_END);
         size = ftell(fp);
+
         if(size == 0){
-          dllist d = initList();
-          return(d);
+          int returning = 0;
+          returning = checkReturnUser();
+          if(returning == 0){
+            dllist d = initList();
+            return(d);
+          }
+          else{
+            int finLoop = 0;
+            while(finLoop == 0){
+            char* dir = getDir();
+            fp = fopen(dir, "a+");
+                if(fp != NULL){
+                fseek(fp, 0, SEEK_END);
+                size = ftell(fp);
+                    if(size == 0){
+                        printf("File is empty \n");
+                        continue;
+                    }
+                    else{
+                        dllist d = initList();
+                        rewind(fp);
+                        char* sTemp = " ";
+                         while(1){
+                            fgets(sTemp, 80, fp);
+                                if(feof(fp)){
+                                    break;
+                                }
+                                else{
+                                    addList(sTemp, d);
+                                 }
+
+            }
+            return(d);
+                    }
+                }
+                else{
+                     printf("ERR: NOT A VALID FILE\n");
+                     continue;
+                }
+            }
+          }
         }
         else{
             dllist d = initList();
@@ -48,16 +110,16 @@
         printf("ERR: FILE POINTER RETURNED NULL CHECK FILE PERMISSIONS\n");
         return NULL;
     }
+
     }
 
 int main(void){
     introInstruct();
-    FILE* fptr; 
-    //a+ opens file for both reading and appending 
+    FILE* fptr;
     fptr = fopen("wcolhold.txt", "a+");
+    //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
     printList(wList);
-    fclose(fptr);
     printf("End.");
     return 0; 
 }
