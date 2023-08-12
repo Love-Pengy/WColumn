@@ -62,13 +62,23 @@
                 fseek(fp, 0, SEEK_END);
                 size = ftell(fp);
                     if(size == 0){
+                        char hold = ' ';
+                        printf("That File is Empty! Would You Like To Continue With This Directory?(Y/N)\n");
+                        scanf("%c", &hold);
+                            if(hold == 'Y'){
+                                dllist d = initList();
+                                return(d);
+                            }
+                            else{
+                                continue;
+                            }
                         printf("File is empty \n");
                         continue;
                     }
                     else{
                         dllist d = initList();
                         rewind(fp);
-                        char* sTemp = " ";
+                        char* sTemp = malloc(sizeof(char) * 81);
                          while(1){
                             fgets(sTemp, 80, fp);
                                 if(feof(fp)){
@@ -108,9 +118,10 @@
     }
        else{
         printf("ERR: FILE POINTER RETURNED NULL CHECK FILE PERMISSIONS\n");
-        return NULL;
+        return(NULL);
     }
-
+    return(NULL);
+        
     }
 
 int main(void){
