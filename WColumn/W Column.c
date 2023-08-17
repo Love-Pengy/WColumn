@@ -9,22 +9,35 @@
 //max string size in chars
 #define MAXSTRSIZE 80
 
+    //Check For Identifier 0 if no identifier 1 if identifier 
+    int checkIdent(char *str){
+        char strCheck[50];
+        strcpy(strCheck, "~W Column App By LovePengy~");
+        if(!strcmp(str, strCheck)){
+            return(1); 
+        }
+        return(0);
+    }
+
     //get rid of whitespace in strings
     char * stringParse(char *pString){
         //printf("DEBUG1!!%s\n", pString);
         int size = strlen(pString);
         //printf("size: %d\n", size);
-        char *newString = malloc(sizeof(char) * size);
+        char *newString = malloc(sizeof(char) * (size + 1));
         int j = 0;
         for(int i = 0; i < size; i++){
             if(!isspace(pString[i])){
                 newString[i-j] = pString[i];
+                //printf("Added: %c\n", pString[i]);
+                //printf("NewString: %s\n", newString);
         }
             else{
                 j++;
             }
      }
      //printf("DEBUG2!!%s\n", newString);
+     newString[size-j] = '\0';
      return(newString);
     }
 
@@ -66,12 +79,16 @@
        if(fp != NULL){
         fseek(fp, 0, SEEK_END);
         size = ftell(fp);
-
-        if(size == 0){
+        rewind(fp);
+        char *strChecker2 = malloc(sizeof(char) * 160);
+        fscanf(fp, "%s", strChecker2);
+        if(size == 0 || checkIdent(strChecker2)){
           int returning = 0;
           returning = checkReturnUser();
           if(returning == 0){
             dllist d = initList();
+            rewind(fp);
+            fprintf(fp, "~W Column App By LovePengy~\n");
             return(d);
           }
           else{
@@ -82,12 +99,16 @@
                 if(fp != NULL){
                 fseek(fp, 0, SEEK_END);
                 size = ftell(fp);
-                    if(size == 0){
+                rewind(fp);
+                char *strChecker = malloc(sizeof(char) * 160);
+                fscanf(fp, "%s", strChecker);
+                    if(size == 0 || (checkIdent(strChecker) == 0)){
                         char hold = ' ';
-                        printf("That File is Empty! Would You Like To Continue With This Directory?(Y/N) ");
+                        printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory?(Y/N) ");
                         scanf(" %c", &hold);
                             if(hold == 'Y'){
                                 dllist d = initList();
+                                fprintf(fp,"~W Column App By LovePengy~\n");
                                 return(d);
                             }
                             else{
@@ -98,7 +119,6 @@
                     }
                     else{
                         dllist d = initList();
-                        rewind(fp);
                         //printf("test: %d\n", fp==NULL);
                         char* sTemp = malloc(sizeof(char) * 81);
                          while(1){
