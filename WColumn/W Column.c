@@ -22,19 +22,44 @@
     //get rid of whitespace in strings
     char * stringParse(char *pString){
         //printf("DEBUG1!!%s\n", pString);
+        int sCount = 0;
         int size = strlen(pString);
         //printf("size: %d\n", size);
         char *newString = malloc(sizeof(char) * (size + 1));
         int j = 0;
         for(int i = 0; i < size; i++){
-            if(!isspace(pString[i])){
-                newString[i-j] = pString[i];
+            //printf("Current: %c\n", pString[i]);
+            if((isalnum(pString[i])) || (ispunct(pString[i]))){
+                if(sCount > 1){
+                    //printf("sCount Above thresh!!: %s\n", newString);
+                    sCount = 0;
+                    if((i-j) == 0){
+                        newString[0] = pString[i];
+                    }
+                    else{
+                        printf("here!!\n");
+                        newString[(i-j)] = ' ';
+                        newString[(i-j)+1] = pString[i];
+                    }
+                    continue;
+                }
+                else if(sCount == 1){
+                    sCount = 0;
+                    newString[i-j] = ' ';
+                    newString[(i-j)+1] = pString[i];
+                    continue;
+                }
+                else{
+                    newString[i-j] = pString[i];
+                }
                 //printf("Added: %c\n", pString[i]);
                 //printf("NewString: %s\n", newString);
         }
             else{
+                sCount++;
                 j++;
             }
+            printf("NewString: %s\n", newString);
      }
      //printf("DEBUG2!!%s\n", newString);
      newString[size-j] = '\0';
@@ -161,7 +186,7 @@
 
             }
             fgets(sTemp, 80, fp);
-            stringParse(sTemp);
+            sTemp = stringParse(sTemp);
             addList(sTemp, d);
             return(d);
         }
