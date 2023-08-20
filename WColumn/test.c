@@ -9,14 +9,21 @@
         //printf("size: %d\n", size);
         char *newString = malloc(sizeof(char) * (size + 1));
         int j = 0;
+        int spaceCount = 0;
         for(int i = 0; i < size; i++){
-            if(!isspace(pString[i])){
+            if(!(isspace(pString[i]))){
                 newString[i-j] = pString[i];
+                spaceCount = 0;
                 //printf("Added: %c\n", pString[i]);
                 //printf("NewString: %s\n", newString);
         }
+        else if((isspace(pString[i])) && (spaceCount == 0)){
+            newString[i-j] = pString[i];
+            spaceCount++;
+        }
             else{
                 j++;
+                spaceCount++;
             }
      }
      //printf("DEBUG2!!%s\n", newString);
