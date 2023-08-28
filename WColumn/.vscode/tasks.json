@@ -8,9 +8,9 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "${fileDirname}\\dllist.c",
                 "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-Wall "
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
             ],
             "options": {
                 "cwd": "${fileDirname}"

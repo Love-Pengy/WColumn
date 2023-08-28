@@ -4,6 +4,8 @@
 #include "dllist.h"
 #include <stdbool.h>
 #include <ctype.h>
+//max line size
+#define LSIZE 300
 //max W's 200
 #define MAXWS 200
 //max string size in chars
@@ -12,6 +14,7 @@
     //Check For Identifier 0 if no identifier 1 if identifier 
     int checkIdent(char *str){
         char strCheck[50];
+        printf("TEST: %s\n", str);
         strcpy(strCheck, "~W Column App By LovePengy~");
         if(!strcmp(str, strCheck)){
             return(1); 
@@ -19,49 +22,38 @@
         return(0);
     }
 
+    char * trailingNLDestroyer(char *str){
+        //strcspn returns the value where the inputed value is found
+        str[strcspn(str, "\n")] = '\0';
+        return(str);
+    }
     //get rid of whitespace in strings
     char * stringParse(char *pString){
         //printf("DEBUG1!!%s\n", pString);
-        int sCount = 0;
         int size = strlen(pString);
+        //printf("Something: %d\n", size);
         //printf("size: %d\n", size);
         char *newString = malloc(sizeof(char) * (size + 1));
         int j = 0;
+        int spaceCount = 0;
+        int countValid = 0;
+        
         for(int i = 0; i < size; i++){
-            //printf("Current: %c\n", pString[i]);
-            if((isalnum(pString[i])) || (ispunct(pString[i]))){
-                if(sCount > 1){
-                    //printf("sCount Above thresh!!: %s\n", newString);
-                    sCount = 0;
-                    if((i-j) == 0){
-                        newString[0] = pString[i];
-                    }
-                    else{
-                        printf("here!!\n");
-                        newString[(i-j)] = ' ';
-                        newString[(i-j)+1] = pString[i];
-                    }
-                    continue;
-                }
-                else if(sCount == 1){
-                    sCount = 0;
-                    newString[i-j] = ' ';
-                    newString[(i-j)+1] = pString[i];
-                    continue;
-                }
-                else{
-                    newString[i-j] = pString[i];
-                }
+            if(!isspace(pString[i])){
+                newString[i-j] = pString[i];
+                spaceCount = 0;
+                countValid++;
                 //printf("Added: %c\n", pString[i]);
                 //printf("NewString: %s\n", newString);
         }
+        else if((spaceCount == 0) && (countValid > 0)){
+            newString[i-j] = pString[i];
+            spaceCount++;
+        }
             else{
-                sCount++;
                 j++;
             }
-            printf("NewString: %s\n", newString);
      }
-     //printf("DEBUG2!!%s\n", newString);
      newString[size-j] = '\0';
      return(newString);
     }
@@ -106,8 +98,9 @@
         size = ftell(fp);
         rewind(fp);
         char *strChecker2 = malloc(sizeof(char) * 160);
-        fscanf(fp, "%s", strChecker2);
-        if(size == 0 || checkIdent(strChecker2)){
+        fgets(strChecker2, LSIZE, fp);
+        strChecker2 = trailingNLDestroyer(strChecker2);
+        if(size == 0 || !checkIdent(strChecker2)){
           int returning = 0;
           returning = checkReturnUser();
           if(returning == 0){
@@ -126,7 +119,8 @@
                 size = ftell(fp);
                 rewind(fp);
                 char *strChecker = malloc(sizeof(char) * 160);
-                fscanf(fp, "%s", strChecker);
+                fgets(strChecker, LSIZE, fp);
+                strChecker = trailingNLDestroyer(strChecker);
                     if(size == 0 || (checkIdent(strChecker) == 0)){
                         char hold = ' ';
                         printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory?(Y/N) ");
@@ -147,7 +141,8 @@
                         //printf("test: %d\n", fp==NULL);
                         char* sTemp = malloc(sizeof(char) * 81);
                          while(1){
-                            fgets(sTemp, 80, fp);
+                            fgets(sTemp, LSIZE, fp);
+                            sTemp = trailingNLDestroyer(sTemp);
                                 if(feof(fp)){
                                     break;
                                 }
@@ -156,6 +151,7 @@
                                     addList(sTemp, d);
                                  }
                             fgets(sTemp, 80, fp);
+                            sTemp = trailingNLDestroyer(sTemp);
                             sTemp = stringParse(sTemp);
                             addList(sTemp, d);
             }
@@ -172,10 +168,12 @@
         else{
             dllist d = initList();
             rewind(fp);
+            //fp = freopen(NULL, "w", fp);
             char* sTemp = malloc(sizeof(char) * 81);
             while(1){
                 //printf("here\n");
                 fgets(sTemp, 80, fp);
+                sTemp = trailingNLDestroyer(sTemp);
                 if(feof(fp)){
                     break;
                 }
@@ -185,7 +183,8 @@
                 }
 
             }
-            fgets(sTemp, 80, fp);
+            fgets(sTemp, LSIZE, fp);
+            sTemp = trailingNLDestroyer(sTemp);
             sTemp = stringParse(sTemp);
             addList(sTemp, d);
             return(d);

@@ -112,11 +112,11 @@ void printList(dllist d){
     }
     else{
         dlNode ptr = d->head;
-        printf("{ ");
+        printf("{");
         while(ptr->next != NULL){
-            printf("%s ", ptr->data);
+            printf("%s", ptr->data);
             ptr = ptr->next;
         }
-        printf("%s }\n", ptr->data);
+        printf("%s}\n", ptr->data);
     }
 }
