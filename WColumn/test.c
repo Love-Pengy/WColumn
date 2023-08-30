@@ -14,7 +14,7 @@
         int countValid = 0;
         
         for(int i = 0; i < size; i++){
-            if(!isspace(pString[i])){
+            if(!(isspace(pString[i]))){
                 newString[i-j] = pString[i];
                 spaceCount = 0;
                 countValid++;
@@ -27,6 +27,7 @@
         }
             else{
                 j++;
+                spaceCount++;
             }
      }
      newString[size-j] = '\0';
