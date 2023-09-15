@@ -27,6 +27,7 @@
         str[strcspn(str, "\n")] = '\0';
         return(str);
     }
+    
     //get rid of whitespace in strings
     char * stringParse(char *pString){
         //printf("DEBUG1!!%s\n", pString);
@@ -85,7 +86,7 @@
     //get dir of W's
     char *getDir(){
         char *hold = malloc(sizeof(char) * 160);
-        printf("What is the Directory where your W's are held?\n");
+        printf("What is the file path to where your W's are held?\n");
         scanf(" %s", hold);
         return(hold);
     }
@@ -170,6 +171,7 @@
             rewind(fp);
             //fp = freopen(NULL, "w", fp);
             char* sTemp = malloc(sizeof(char) * 81);
+            fgets(sTemp, 80, fp);
             while(1){
                 //printf("here\n");
                 fgets(sTemp, 80, fp);
@@ -183,10 +185,10 @@
                 }
 
             }
-            fgets(sTemp, LSIZE, fp);
+            /*fgets(sTemp, LSIZE, fp);
             sTemp = trailingNLDestroyer(sTemp);
             sTemp = stringParse(sTemp);
-            addList(sTemp, d);
+            addList(sTemp, d);*/
             return(d);
         }
     }
@@ -198,6 +200,17 @@
         
     }
 
+
+
+
+
+
+
+
+
+
+
+
     
 int main(void){
     introInstruct();
@@ -207,5 +220,6 @@ int main(void){
     dllist wList = loadWs(fptr);
     printList(wList);
     printf("End.");
+    fclose(fptr);
     return 0; 
 }
