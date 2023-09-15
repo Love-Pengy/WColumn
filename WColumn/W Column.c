@@ -14,7 +14,7 @@
     //Check For Identifier 0 if no identifier 1 if identifier 
     int checkIdent(char *str){
         char strCheck[50];
-        printf("TEST: %s\n", str);
+        //printf("TEST: %s\n", str);
         strcpy(strCheck, "~W Column App By LovePengy~");
         if(!strcmp(str, strCheck)){
             return(1); 
@@ -101,6 +101,7 @@
         char *strChecker2 = malloc(sizeof(char) * 160);
         fgets(strChecker2, LSIZE, fp);
         strChecker2 = trailingNLDestroyer(strChecker2);
+
         if(size == 0 || !checkIdent(strChecker2)){
           int returning = 0;
           returning = checkReturnUser();
@@ -110,6 +111,7 @@
             fprintf(fp, "~W Column App By LovePengy~\n");
             return(d);
           }
+
           else{
             int finLoop = 0;
             while(finLoop == 0){
@@ -137,6 +139,7 @@
                         printf("File is empty \n");
                         continue;
                     }
+
                     else{
                         dllist d = initList();
                         //printf("test: %d\n", fp==NULL);
@@ -166,12 +169,15 @@
             }
           }
         }
+
         else{
+            //printf("\nHERE\n");
             dllist d = initList();
             rewind(fp);
             //fp = freopen(NULL, "w", fp);
             char* sTemp = malloc(sizeof(char) * 81);
             fgets(sTemp, 80, fp);
+            sTemp = malloc(sizeof(char) * 81);
             while(1){
                 //printf("here\n");
                 fgets(sTemp, 80, fp);
