@@ -11,6 +11,53 @@
 //max string size in chars
 #define MAXSTRSIZE 80
 
+
+    //add .txt to files without a file extension or change the file extention to .txt if one exists but isnt a text extention 
+    char *textAdd(char *str){
+        //printf("got to text add\n");
+        int size = strlen(str);
+        char *textAdd = malloc(sizeof(char)* (size + 4));
+        if(strchr(str, '.') == NULL){
+            strcpy(textAdd, str);
+            strcat(textAdd, ".txt");
+            return(textAdd);
+        }
+        char* end = malloc(sizeof(char) * 10);
+        end = strchr(str, '.');
+        int sizeEnd = strlen(end);
+        for(int i = 0; i < size - sizeEnd; i++){
+            textAdd[i] = str[i];
+        }
+        strcat(textAdd, ".txt");
+        return(textAdd);
+    }
+
+
+    //Check for .txt file extention 1 if txt 0 if not
+    int checkText(char *str){
+        char * token = strtok(str, ".");
+        char * lastToken = malloc(sizeof(char) * strlen(token));
+        while( token != NULL ) {
+            strcpy(lastToken, token);
+            token = strtok(NULL, ".");
+        }
+        printf("TEST WHILE: %s\n", lastToken);
+        if(!strcmp(lastToken, "txt")){
+            return 1;
+        }
+        return 0;
+        //int size = strlen(str);
+        //printf("TOKEN TEST: %d\n", str == NULL);
+        //printf("TEST: %s\n", token);
+        //printf("TEST2: (token size): %lld (str size): %lld \n", strlen(token), strlen(str));
+        /*if(token == NULL || (strlen(token) == strlen(str))){
+            printf("exit clause\n");
+            return(0);
+        }
+    return(0);*/
+    
+    }
+
     //Check For Identifier 0 if no identifier 1 if identifier 
     int checkIdent(char *str){
         char strCheck[50];
@@ -124,11 +171,16 @@
                 char *strChecker = malloc(sizeof(char) * 160);
                 fgets(strChecker, LSIZE, fp);
                 strChecker = trailingNLDestroyer(strChecker);
-                    if(size == 0 || (checkIdent(strChecker) == 0)){
+                    if(size == 0 || (checkIdent(strChecker) == 0) || (!checkText(dir))){
                         char hold = ' ';
                         printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory?(Y/N) ");
                         scanf(" %c", &hold);
-                            if(hold == 'Y'){
+                            if(hold == 'Y' || hold == 'y'){
+                                printf("DIR CHECK: %s\n", dir);
+                                if(!checkText(dir)){
+                                    fclose(fp);
+                                    fp = fopen(textAdd(dir), "w");
+                                }
                                 dllist d = initList();
                                 fprintf(fp,"~W Column App By LovePengy~\n");
                                 return(d);
