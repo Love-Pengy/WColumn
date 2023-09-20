@@ -11,6 +11,24 @@
 //max string size in chars
 #define MAXSTRSIZE 80
 
+    //if user wants to create file return 1 if they want to continue with default return 2
+    int invalFilePrompt(void){
+        int hold = 0;
+        int returning = 0;
+        while(1){
+            if(returning == 0){
+                printf("That file does not exist! Would you like to create this file (1), continue with the default directory (2), or give another directory? (3)\n");
+            }
+            else{
+                printf("That was not one of the options! Please try again. \n");
+            }
+        scanf(" %d", &hold);
+        if(hold > 0 || hold < 4){
+            return(hold);
+        }
+        returning++;
+        }
+    }
 
     //add .txt to files without a file extension or change the file extention to .txt if one exists but isnt a text extention 
     char *textAdd(char *str){
@@ -41,7 +59,7 @@
             strcpy(lastToken, token);
             token = strtok(NULL, ".");
         }
-        printf("TEST WHILE: %s\n", lastToken);
+        //printf("TEST WHILE: %s\n", lastToken);
         if(!strcmp(lastToken, "txt")){
             return 1;
         }
@@ -163,7 +181,7 @@
             int finLoop = 0;
             while(finLoop == 0){
             char* dir = getDir();
-            fp = fopen(dir, "a+");
+            fp = fopen(dir, "r");
                 if(fp != NULL){
                 fseek(fp, 0, SEEK_END);
                 size = ftell(fp);
@@ -176,7 +194,7 @@
                         printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory?(Y/N) ");
                         scanf(" %c", &hold);
                             if(hold == 'Y' || hold == 'y'){
-                                printf("DIR CHECK: %s\n", dir);
+                                //printf("DIR CHECK: %s\n", dir);
                                 if(!checkText(dir)){
                                     fclose(fp);
                                     fp = fopen(textAdd(dir), "w");
@@ -193,6 +211,8 @@
                     }
 
                     else{
+                        fclose(fp);
+                        fp = fopen(dir, "a+");
                         dllist d = initList();
                         //printf("test: %d\n", fp==NULL);
                         char* sTemp = malloc(sizeof(char) * 81);
@@ -215,8 +235,27 @@
                     }
                 }
                 else{
-                     printf("ERR: NOT A VALID FILE\n");
+                    int grubbyHandGrabber; 
+                    grubbyHandGrabber = invalFilePrompt();
+                    if(grubbyHandGrabber == 1){
+                        if(!checkText(dir)){
+                                    fclose(fp);
+                                    fp = fopen(textAdd(dir), "w");
+                                }
+                                dllist d = initList();
+                                fprintf(fp,"~W Column App By LovePengy~\n");
+                                return(d);
+                    }
+
+                    else if(grubbyHandGrabber == 2){
+                        fp = fopen("wcolhold.txt", "w");
+                        fprintf(fp, "~W Column App By LovePengy~\n");
+                        dllist d = initList();
+                        return(d);
+                    }
+                    else{
                      continue;
+                    }
                 }
             }
           }
