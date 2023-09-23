@@ -53,7 +53,9 @@
 
     //Check for .txt file extention 1 if txt 0 if not
     int checkText(char *str){
-        char * token = strtok(str, ".");
+        char * newString = malloc(sizeof(char) * strlen(str));
+        strcpy(newString, str);
+        char * token = strtok(newString, ".");
         char * lastToken = malloc(sizeof(char) * strlen(token));
         while( token != NULL ) {
             strcpy(lastToken, token);
@@ -190,20 +192,35 @@
                 fgets(strChecker, LSIZE, fp);
                 strChecker = trailingNLDestroyer(strChecker);
                     if(size == 0 || (checkIdent(strChecker) == 0) || (!checkText(dir))){
-                        char hold = ' ';
-                        printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory?(Y/N) ");
-                        scanf(" %c", &hold);
-                            if(hold == 'Y' || hold == 'y'){
+                        int hold = 0;
+                        printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory(1), continue with the default directory(2), or pick another directory(3)? ");
+                        scanf(" %d", &hold);
+                            if(hold == 1){
+                                //here it has it 
                                 //printf("DIR CHECK: %s\n", dir);
                                 if(!checkText(dir)){
+                                    //printf("if\n\n");
                                     fclose(fp);
                                     fp = fopen(textAdd(dir), "w");
+                                }
+                                
+                                else{
+                                    //printf("else\n\n");
+                                    fclose(fp);
+                                    printf("else test: %s\n\n", dir);
+                                    fp = fopen(dir, "w");
                                 }
                                 dllist d = initList();
                                 fprintf(fp,"~W Column App By LovePengy~\n");
                                 return(d);
                             }
-                            else{
+                            else if(hold == 2){
+                                fp = fopen("wcolhold.txt", "w"); 
+                                dllist d = initList();
+                                fprintf(fp,"~W Column App By LovePengy~\n");
+                                return(d);
+                            }
+                            else{ 
                                 continue;
                             }
                         printf("File is empty \n");
