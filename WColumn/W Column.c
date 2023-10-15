@@ -193,7 +193,9 @@
                 strChecker = trailingNLDestroyer(strChecker);
                     if(size == 0 || (checkIdent(strChecker) == 0) || (!checkText(dir))){
                         int hold = 0;
-                        printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory(1), continue with the default directory(2), or pick another directory(3)? ");
+                        printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory(1), continue with the default directory(2), or pick another directory(3)?\n");
+                        printf("NOTE: Continuing with this directory will delete everything within this file. \n");
+                    
                         scanf(" %d", &hold);
                             if(hold == 1){
                                 //here it has it 
@@ -281,7 +283,8 @@
         else{
             //printf("\nHERE\n");
             dllist d = initList();
-            rewind(fp);
+            fp = fopen("wcolhold.txt", "w");
+            //rewind(fp);
             //fp = freopen(NULL, "w", fp);
             char* sTemp = malloc(sizeof(char) * 81);
             fgets(sTemp, 80, fp);
