@@ -4,6 +4,7 @@
 #include "dllist.h"
 #include <stdbool.h>
 #include <ctype.h>
+#include <conio.h>
 //max line size
 #define LSIZE 300
 //max W's 200
@@ -11,6 +12,27 @@
 //max string size in chars
 #define MAXSTRSIZE 80
 
+    void userInputPrompt(void){
+        //clear screen 
+        system("cls");
+        printf("You are about to enter input mode!\n");
+        printf("To add a W you just type what you want and hit enter!\n");
+        printf("To enter \"roaming mode\" you type ROAM and hit enter\n");
+        printf("Within roaming mode you will be able to view past W's as well as edit/delete them!\n");
+        printf("~~~ Press Any Key To Continue ~~~");
+        char hold = ' ';
+        scanf("%c", hold);
+        system("cls");
+    }
+
+    void userInputAction(void){
+        //prompt user for how to input information
+        userInputPrompt();
+        //take user input and add it to the dllist
+        userInputString();
+        //starts roaming mode 
+        userInputRoam();
+    } 
     //if user wants to create file return 1 if they want to continue with default return 2
     int invalFilePrompt(void){
         int hold = 0;
