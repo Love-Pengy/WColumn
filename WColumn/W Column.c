@@ -19,6 +19,7 @@
         printf("To add a W you just type what you want and hit enter!\n");
         printf("To enter \"roaming mode\" you type ROAM and hit enter\n");
         printf("Within roaming mode you will be able to view past W's as well as edit/delete them!\n");
+        printf("To fully exit type \"bye\" and it enter! This will exit input mode and give you your recap! \n");
         printf("~~~ Press Any Key To Continue ~~~");
         char hold;
         scanf("%c", &hold);
