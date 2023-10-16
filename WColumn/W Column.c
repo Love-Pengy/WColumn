@@ -20,9 +20,19 @@
         printf("To enter \"roaming mode\" you type ROAM and hit enter\n");
         printf("Within roaming mode you will be able to view past W's as well as edit/delete them!\n");
         printf("~~~ Press Any Key To Continue ~~~");
-        char hold = ' ';
-        scanf("%c", hold);
+        char hold;
+        scanf("%c", &hold);
+        printf("Got Input\n");
         system("cls");
+    }
+
+    char * userInputString(){
+        printf("userInputString\n");
+        return(NULL);
+    }
+
+    void userInputRoam(){
+        printf("userInputRoam\n");
     }
 
     void userInputAction(void){
@@ -306,6 +316,7 @@
             //printf("\nHERE\n");
             dllist d = initList();
             fp = fopen("wcolhold.txt", "w");
+            fprintf(fp, "~W Column App By LovePengy~\n");
             //rewind(fp);
             //fp = freopen(NULL, "w", fp);
             char* sTemp = malloc(sizeof(char) * 81);
@@ -358,6 +369,7 @@ int main(void){
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
     printList(wList);
+    userInputAction();
     printf("End.");
     fclose(fptr);
     return 0; 
