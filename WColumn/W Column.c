@@ -27,23 +27,84 @@
         system("cls");
     }
 
+    void fillTop(void){
+        printf(" ");
+        for(int i = 0; i < 79; i++){
+            printf("\e[38;5;219m-");
+        }
+        printf("\n");
+    }
+    
+    void fillSides(void){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 79; j++){
+                if(j == 0){
+                    printf("\e[38;5;219m|");
+                }
+                else if(j == 78){
+                    printf("\e[38;5;219m|");
+                }
+                printf(" ");
+            }
+            printf("\n");
+        }
+    }
+    void fillBottom(void){
+        printf(" ");
+        for(int i = 0; i < 79; i++){
+            printf("\e[38;5;219m-");
+        }
+    }
+    
+    void createBox(void){
+        system("cls");
+        fillTop();
+        fillSides();
+        fillBottom();
+        //move up 5 lines
+        printf("\e[5A");
+        //move left 79 lines
+        printf("\e[79D");
+    }
     char * userInputString(){
-        printf("userInputString\n");
-        return(NULL);
+        createBox();
+        char * input = malloc(sizeof(char) * 81);
+        //reset style
+        printf("\e[0m");
+        scanf("%s", input);
+        //printf("Inputed String: %s\n", test);
+        return(input);
     }
 
     void userInputRoam(){
+        //need function to create box an write roamed string in
         printf("userInputRoam\n");
     }
 
-    void userInputAction(void){
-        //prompt user for how to input information
-        userInputPrompt();
-        //take user input and add it to the dllist
-        userInputString();
-        //starts roaming mode 
-        userInputRoam();
-    } 
+    void userInputAction(dllist list){ 
+        for(int i = 0; i < MAXWS; i++){
+            char* currentString = malloc(sizeof(char) * 82);
+            if(i == 0){
+                //prompt user for how to input information
+                userInputPrompt();
+            }
+            //take user input and add it to the dllist
+            currentString = userInputString();
+            if(currentString == NULL){
+                continue;
+            }
+            else if(!strcmp(currentString, "ROAM")){
+                //starts roaming mode 
+                userInputRoam();
+            }
+            else if(!strcmp(currentString, "bye")){
+                break;
+            }
+            else{
+                addList(currentString, list);
+            }
+        }
+    }
     //if user wants to create file return 1 if they want to continue with default return 2
     int invalFilePrompt(void){
         int hold = 0;
@@ -165,9 +226,11 @@
         printf("Hello! This app is inspired by Dr. K's talk about turning w's into l's (https://twitter.com/HealthyGamerGG/status/1615857210638180353?s=200).\n This app is designed to help you keep track of your w's and put them in your respective \"column\"! \n");
         printf("~~Press any key to continue~~");
         scanf("%c", &hold);
+        system("cls");
         printf("You will see your W column show up, when that happens you will have the opportunity to type in all of your W's into your column! whether it be big or small a W is a W! Go ahead and type it out! After each W you type in hit enter and your box will close and hold the W for later viewing! When done you can type -1 and you will get your recap for the day!\n");
         printf("~~Press any key to continue~~");
         scanf("%c", &hold);
+        system("cls");
     }
 
     //check if user is a returning user (0 = false);
@@ -370,7 +433,7 @@ int main(void){
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
     printList(wList);
-    userInputAction();
+    userInputAction(wList);
     printf("End.");
     fclose(fptr);
     return 0; 
