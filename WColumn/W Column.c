@@ -6,6 +6,7 @@
 #include <ctype.h>
 #include <conio.h>
 #include <time.h>
+#include <windows.h>
 //max line size
 #define LSIZE 300
 //max W's 200
@@ -18,6 +19,55 @@ int color = 0;
 //global randBool for randColor 
 bool randColor = false;
 
+//go back to this later cause you have negative clue what this does but it works :3
+//https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+void consoleEscapeCodeSetup(void){
+    // Set output mode to handle virtual terminal sequences
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+    HANDLE hIn = GetStdHandle(STD_INPUT_HANDLE);
+    if (hIn == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
+    DWORD dwOriginalOutMode = 0;
+    DWORD dwOriginalInMode = 0;
+    if (!GetConsoleMode(hOut, &dwOriginalOutMode))
+    {
+        return false;
+    }
+    if (!GetConsoleMode(hIn, &dwOriginalInMode))
+    {
+        return false;
+    }
+
+    DWORD dwRequestedOutModes = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+    DWORD dwRequestedInModes = ENABLE_VIRTUAL_TERMINAL_INPUT;
+
+    DWORD dwOutMode = dwOriginalOutMode | dwRequestedOutModes;
+    if (!SetConsoleMode(hOut, dwOutMode))
+    {
+        // we failed to set both modes, try to step down mode gracefully.
+        dwRequestedOutModes = ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        dwOutMode = dwOriginalOutMode | dwRequestedOutModes;
+        if (!SetConsoleMode(hOut, dwOutMode))
+        {
+            // Failed to set any VT mode, can't do anything here.
+            return -1;
+        }
+    }
+
+    DWORD dwInMode = dwOriginalInMode | dwRequestedInModes;
+    if (!SetConsoleMode(hIn, dwInMode))
+    {
+        // Failed to set VT input mode, can't do anything here.
+        return -1;
+    }
+}
 //returns the int that corresponds to the next color. 
 void randColorDuplicateDestroyer(void){
     if((randColor != true) && (color != 4)){
@@ -64,7 +114,7 @@ void userInputPrompt(void){
     printf("To add a W you just type what you want and hit enter!\n");
     printf("To enter \"roaming mode\" you type ROAM and hit enter\n");
     printf("Within roaming mode you will be able to view past W's as well as edit/delete them!\n");
-    printf("To fully exit type \"bye\" and it enter! This will exit input mode and give you your recap! \n");
+    printf("To fully exit type \"bye!\" and it enter! This will exit input mode and give you your recap! \n");
     printf("~~~ Press Any Key To Continue ~~~");
     char hold;
     scanf("%c", &hold);
@@ -146,7 +196,7 @@ void userInputAction(dllist list){
             //starts roaming mode 
             userInputRoam();
         }
-        else if(!strcmp(currentString, "bye")){
+        else if(!strcmp(currentString, "bye!")){
             break;
         }
         else{
@@ -473,7 +523,6 @@ return(NULL);
 
 
 
-
     
 int main(void){
     //sets random seed to a random value 
@@ -483,11 +532,12 @@ int main(void){
     fptr = fopen("wcolhold.txt", "a+");
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
-    printList(wList);
     /*for(int i = 0; i < 10; i++){
         setRandomCLIColor();
     }*/
     userInputAction(wList);
+    system("cls");
+    printList(wList);
     printf("End.");
     fclose(fptr);
     return 0; 

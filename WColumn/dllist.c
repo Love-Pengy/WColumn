@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
- struct node{
+struct node{
     struct node *next; 
     struct node *prev; 
     char *data;
- };
+};
  typedef struct node *dlNode;
 
 struct header{
@@ -114,7 +114,7 @@ void printList(dllist d){
         dlNode ptr = d->head;
         printf("{");
         while(ptr->next != NULL){
-            printf("%s", ptr->data);
+            printf("%s,", ptr->data);
             ptr = ptr->next;
         }
         printf("%s}\n", ptr->data);
