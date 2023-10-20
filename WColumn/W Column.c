@@ -21,7 +21,8 @@ bool randColor = false;
 
 //go back to this later cause you have negative clue what this does but it works :3
 //https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-void consoleEscapeCodeSetup(void){
+//HANDLE type is a reference that allows you to access a resource
+int consoleEscapeCodeSetup(void){
     // Set output mode to handle virtual terminal sequences
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut == INVALID_HANDLE_VALUE)
@@ -67,6 +68,7 @@ void consoleEscapeCodeSetup(void){
         // Failed to set VT input mode, can't do anything here.
         return -1;
     }
+    return 0;
 }
 //returns the int that corresponds to the next color. 
 void randColorDuplicateDestroyer(void){
@@ -153,6 +155,45 @@ void fillBottom(void){
     }
 }
 
+void createRoamUI(void){
+    system("cls");
+    for(int i = 0; i < 10; i++){
+        printf(" ");
+    }
+    printf("\e[1m");
+    printf("\e[48;5;230m");
+    printf("\e[38;5;232m");  
+      //fflush(stdout);
+    printf("MOVE: w & s");
+    printf("\e[0m");
+    for(int i = 0; i < 10; i++){
+        printf(" ");
+    }
+
+    printf("\e[1m");
+    printf("\e[48;5;230m");
+    printf("\e[38;5;232m");
+    printf("EDIT: e");
+    printf("\e[0m");
+    for(int i = 0; i < 10; i++){
+        printf(" ");
+    }
+    printf("\e[1m");
+    printf("\e[48;5;230m");
+    printf("\e[38;5;232m"); 
+    printf("DELETE: d");
+    printf("\e[0m");
+    for(int i = 0; i < 10; i++){
+        printf(" ");
+    }
+    printf("\e[1m");
+    printf("\e[48;5;230m");
+    printf("\e[38;5;232m"); 
+    printf("EXIT: r");
+    printf("\e[0m");
+    printf("\n");
+}
+
 void createBox(void){
     system("cls");
     fillTop();
@@ -174,8 +215,12 @@ char * userInputString(){
 }
 
 void userInputRoam(){
+    int something = 0;
     //need function to create box an write roamed string in
+    createRoamUI();
     printf("userInputRoam\n");
+    printf("HOLDING: ");
+    scanf("%d", &something);
 }
 
 void userInputAction(dllist list){ 
