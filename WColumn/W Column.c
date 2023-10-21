@@ -204,6 +204,17 @@ void createBox(void){
     //move left 79 lines
     printf("\e[79D");
 }
+
+void createBoxNoClear(void){
+    fillTop();
+    fillSides();
+    fillBottom();
+    //move up 5 lines
+    printf("\e[5A");
+    //move left 79 lines
+    printf("\e[79D");
+}
+
 char * userInputString(){
     createBox();
     char * input = malloc(sizeof(char) * 81);
@@ -214,13 +225,20 @@ char * userInputString(){
     return(input);
 }
 
-void userInputRoam(){
-    int something = 0;
+void userInputRoam(dllist list){
+    //w = up
+    //s = down 
+    //e = edit mode
+    //d = delete 
+    //r = exit
+    char holdCurrChar = ' ';
     //need function to create box an write roamed string in
     createRoamUI();
-    printf("userInputRoam\n");
-    printf("HOLDING: ");
-    scanf("%d", &something);
+    createBoxNoClear();
+    holdCurrChar = getche();
+    if((holdCurrChar == 'w') | (holdCurrChar == 'W')){
+        
+    }
 }
 
 void userInputAction(dllist list){ 

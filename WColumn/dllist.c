@@ -120,3 +120,41 @@ void printList(dllist d){
         printf("%s}\n", ptr->data);
     }
 }
+//delete item at index specified. STARTS AT 0 
+void deleteItem(dllist list, int index){
+    int ignore = 0;
+    //if list is empty 
+    if(list == NULL){
+        printf("deleteItem passed NULL dllist\n");
+    }
+    //if removing head node
+    else if(index == 0){
+        dlNode newHead = list->head->next;
+        free(list->head);
+        list->head = newHead;
+    }
+    else{
+    dlNode delPtr = list->head;
+    for(int i = 0; i < index; i++){
+        if(delPtr->next != NULL){
+            delPtr = delPtr->next; 
+        }
+        else{
+            printf("Index out of bounds\n");
+            ignore = 1;
+        }
+    }
+    if((!ignore) && (delPtr->next != NULL)){
+        dlNode prevPtr = delPtr->prev; 
+        dlNode nextPtr = delPtr->next; 
+        prevPtr->next = nextPtr; 
+        nextPtr->prev = prevPtr; 
+        free(delPtr);
+        }
+    if((!ignore) && (delPtr->next == NULL)){
+        dlNode prevPtr = delPtr->prev;
+        free(list->tail);
+        list->tail = prevPtr;
+    }
+    }
+}
