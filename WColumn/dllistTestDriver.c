@@ -48,7 +48,7 @@ int main (void){
     replaceAtIndex(list, listSize(list), "changed tail");
     printf("size: %d\n", listSize(list));
     printList(list);
-
+    printf("PRINTING LIST USING GETITEM: %s, %s, %s, %s, %s\n", (getItemAtIndex(list, 1)), getItemAtIndex(list, 2), getItemAtIndex(list, 3), getItemAtIndex(list, 4), getItemAtIndex(list, 5));
     /*clearList(list);
     str = "2";
     addList(str, list);

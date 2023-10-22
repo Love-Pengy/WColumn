@@ -180,3 +180,18 @@ void replaceAtIndex(dllist list, int index, char* string){
         strcpy(ptr->data, string); 
     }
 }
+
+//get item at specified index. STARTS AT 1
+char * getItemAtIndex(dllist list, int index){
+    if((index < 1) || (index > listSize(list))){
+        printf("getItemAtIndex passed invalid index");
+        return(NULL);
+    }
+    else{ 
+        dlNode ptr = list->head; 
+        for(int i = 0; i < (index - 1); i++){
+            ptr = ptr->next;
+        }
+        return(ptr->data);
+    }
+}

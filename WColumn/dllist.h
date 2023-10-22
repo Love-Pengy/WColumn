@@ -13,3 +13,4 @@ void clearList(dllist);
 void removeAtIndex(dllist, int);
 void printList(dllist);
 void replaceAtIndex(dllist, int, char *);
+char * getItemAtIndex(dllist, int);
