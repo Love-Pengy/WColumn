@@ -244,17 +244,18 @@ void userInputRoam(dllist list){
         createRoamUI();
         createBoxNoClear();
         printf("%s", getItemAtIndex(list, currentIndex));
-        holdCurrChar = getche();
+        holdCurrChar = getch();
+        printf(" ");
 
         if((holdCurrChar == 'w') | (holdCurrChar == 'W')){
             system("cls");
             createRoamUI();
             createBoxNoClear();
-            if((currentIndex != 1) && (currentIndex != listSize(list))){
+            if((currentIndex != 1)){
                 currentIndex--;
                 continue;
             }
-            else if(currentIndex == 1){
+            else{
                 for(int i = 0; i < 5; i++){
                     createRoamUI();
                     createBoxNoClear();
@@ -276,6 +277,15 @@ void userInputRoam(dllist list){
                 }
                 printf("\e[25m");
                 printf("\e[?25l");
+                continue;
+            }
+        }   
+        else if((holdCurrChar == 's') | (holdCurrChar == 'S')){
+            system("cls");
+            createRoamUI();
+            createBoxNoClear();
+            if((currentIndex != listSize(list))){
+                currentIndex++;
                 continue;
             }
             else{
@@ -303,6 +313,57 @@ void userInputRoam(dllist list){
                 continue;
             }
         }   
+        else if((holdCurrChar == 'd') | (holdCurrChar == 'D')){
+            system("cls");
+            createRoamUI();
+            createBoxNoClear();
+            if((listSize(list) != 1)){
+                if(currentIndex == listSize(list)){
+                    removeAtIndex(list, currentIndex);
+                    currentIndex--;
+                    continue;
+                }
+                removeAtIndex(list, currentIndex);
+                continue;
+            }
+            else{
+                for(int i = 0; i < 5; i++){ 
+                    createRoamUI();
+                    createBoxNoClear();
+                    if((i % 2) == 0){
+                        //red
+                        printf("\e[38;5;196m");
+                    }
+                    else{
+                        //white
+                        printf("\e[38;5;255m");
+                    }
+                    for(int j = 0; j < 30; j++){
+                        printf(" ");
+                    }
+                    printf("!!Removing Last Item!!");
+                    //stop for .05 seconds
+                    Sleep(75);
+                    system("cls");
+                    for(int j = 0; j < 30; j++){
+                        printf(" ");
+                    }
+                }
+                removeAtIndex(list, currentIndex);
+                printf("\n\n\n\n\n");
+                for(int i = 0; i < 30; i++){
+                    printf(" ");
+                }
+                printf("Returning To Insert Mode");
+                Sleep(2000);
+                printf("\e[25m");
+                printf("\e[?25l");
+                exit = 1;
+            }
+        }   
+        else if((holdCurrChar == 'r') || (holdCurrChar == 'R')){
+            exit = 1;
+        }
         /*else if((holdCurrChar == 's') || (holdCurrChar == 'S')){
             createRoamUI();
             createBoxNoClear();
@@ -675,6 +736,8 @@ int main(void){
     userInputAction(wList);
     system("cls");
     printList(wList);
+    printf("\e[?25h");
+    clearList(wList);
     printf("End.");
     fclose(fptr);
     return 0; 

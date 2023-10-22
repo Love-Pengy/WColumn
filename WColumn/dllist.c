@@ -129,6 +129,9 @@ void removeAtIndex(dllist list, int index){
     else if((index > listSize(list)) || (index < 1)){
         printf("deleteItem passed invalid index\n");
     }
+    else if(listSize(list) == 1){
+        clearList(list);
+    }
     //if removing head node
     else if(index == 1){
         dlNode newHead = list->head->next;
@@ -184,7 +187,7 @@ void replaceAtIndex(dllist list, int index, char* string){
 //get item at specified index. STARTS AT 1
 char * getItemAtIndex(dllist list, int index){
     if((index < 1) || (index > listSize(list))){
-        printf("getItemAtIndex passed invalid index");
+        printf("getItemAtIndex passed invalid index: %d", index);
         return(NULL);
     }
     else{ 
