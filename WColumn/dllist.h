@@ -10,5 +10,6 @@ dlNode createNode(char *);
 int listSize(dllist);
 dllist addList(char *, dllist);
 void clearList(dllist);
-void deleteItem(dllist, int);
+void removeAtIndex(dllist, int);
 void printList(dllist);
+void replaceAtIndex(dllist, int, char *);

@@ -104,7 +104,7 @@ void clearList(dllist d){
 }
 
 void printList(dllist d){
-    if(listSize(d) == 0){
+    if((listSize(d) == 0) || (d == NULL)){
         printf("EMPTY!!: {}\n");
     }
     else if(listSize(d) == 1){
@@ -120,41 +120,63 @@ void printList(dllist d){
         printf("%s}\n", ptr->data);
     }
 }
-//delete item at index specified. STARTS AT 0 
-void deleteItem(dllist list, int index){
-    int ignore = 0;
+//delete item at index specified. STARTS AT 1
+void removeAtIndex(dllist list, int index){
     //if list is empty 
     if(list == NULL){
         printf("deleteItem passed NULL dllist\n");
     }
+    else if((index > listSize(list)) || (index < 1)){
+        printf("deleteItem passed invalid index\n");
+    }
     //if removing head node
-    else if(index == 0){
+    else if(index == 1){
         dlNode newHead = list->head->next;
         free(list->head);
         list->head = newHead;
+        list->size--;
     }
     else{
-    dlNode delPtr = list->head;
-    for(int i = 0; i < index; i++){
-        if(delPtr->next != NULL){
+        dlNode delPtr = list->head;
+        for(int i = 0; i < (index - 1); i++){
             delPtr = delPtr->next; 
         }
-        else{
-            printf("Index out of bounds\n");
-            ignore = 1;
+        if(delPtr->next != NULL){
+            dlNode prevPtr = delPtr->prev; 
+            dlNode nextPtr = delPtr->next; 
+            prevPtr->next = nextPtr; 
+            nextPtr->prev = prevPtr; 
+            free(delPtr);
+            list->size--;
+        }
+        if(delPtr->next == NULL){
+            dlNode prevPtr = delPtr->prev;
+            free(list->tail);
+            list->tail = prevPtr;
+            list->size--;
         }
     }
-    if((!ignore) && (delPtr->next != NULL)){
-        dlNode prevPtr = delPtr->prev; 
-        dlNode nextPtr = delPtr->next; 
-        prevPtr->next = nextPtr; 
-        nextPtr->prev = prevPtr; 
-        free(delPtr);
-        }
-    if((!ignore) && (delPtr->next == NULL)){
-        dlNode prevPtr = delPtr->prev;
-        free(list->tail);
-        list->tail = prevPtr;
+}
+
+//Add item at index specified. STARTS AT 1
+void replaceAtIndex(dllist list, int index, char* string){
+    if((index > listSize(list)) || (index < 1)){
+        printf("addAtIndex passed invalid index\n");
     }
+    else if((string == NULL) || (!strcmp(string, " ")) || (!strcmp(string, "\n"))){
+        printf("addAtIndex passed invalid string\n");
+    } 
+    else if(index == 1){
+        strcpy(list->head->data, string);
+    }
+    else if(index == listSize(list)){
+        strcpy(list->tail->data, string);
+}
+    else{
+        dlNode ptr = list->head;
+        for(int i = 0; i < (index - 1); i++){
+            ptr = ptr->next;
+        }
+        strcpy(ptr->data, string); 
     }
 }
