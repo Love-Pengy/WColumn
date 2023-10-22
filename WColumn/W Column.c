@@ -166,6 +166,7 @@ void createRoamUI(void){
       //fflush(stdout);
     printf("MOVE: w & s");
     printf("\e[0m");
+    printf("\e[?25l");
     for(int i = 0; i < 10; i++){
         printf(" ");
     }
@@ -175,6 +176,7 @@ void createRoamUI(void){
     printf("\e[38;5;232m");
     printf("EDIT: e");
     printf("\e[0m");
+    printf("\e[?25l");
     for(int i = 0; i < 10; i++){
         printf(" ");
     }
@@ -183,6 +185,7 @@ void createRoamUI(void){
     printf("\e[38;5;232m"); 
     printf("DELETE: d");
     printf("\e[0m");
+    printf("\e[?25l");
     for(int i = 0; i < 10; i++){
         printf(" ");
     }
@@ -191,6 +194,7 @@ void createRoamUI(void){
     printf("\e[38;5;232m"); 
     printf("EXIT: r");
     printf("\e[0m");
+    printf("\e[?25l");
     printf("\n");
 }
 
@@ -220,24 +224,89 @@ char * userInputString(){
     char * input = malloc(sizeof(char) * 81);
     //reset style
     printf("\e[0m");
+    printf("\e[?25l");
     gets(input);
     //printf("Inputed String: %s\n", test);
     return(input);
 }
 
 void userInputRoam(dllist list){
-    //w = up
-    //s = down 
+    //w = up (go from tail to head)
+    //s = down (go from head to tail)
     //e = edit mode
     //d = delete 
     //r = exit
+    int currentIndex = listSize(list);
     char holdCurrChar = ' ';
-    //need function to create box an write roamed string in
-    createRoamUI();
-    createBoxNoClear();
-    holdCurrChar = getche();
-    if((holdCurrChar == 'w') | (holdCurrChar == 'W')){
-        
+    int exit = 0;
+    while(!exit){
+        //need function to create box an write roamed string in
+        createRoamUI();
+        createBoxNoClear();
+        printf("%s", getItemAtIndex(list, currentIndex));
+        holdCurrChar = getche();
+
+        if((holdCurrChar == 'w') | (holdCurrChar == 'W')){
+            system("cls");
+            createRoamUI();
+            createBoxNoClear();
+            if((currentIndex != 1) && (currentIndex != listSize(list))){
+                currentIndex--;
+                continue;
+            }
+            else if(currentIndex == 1){
+                for(int i = 0; i < 5; i++){
+                    createRoamUI();
+                    createBoxNoClear();
+                    if((i % 2) == 0){
+                        //red
+                        printf("\e[38;5;196m");
+                    }
+                    else{
+                        //white
+                        printf("\e[38;5;255m");
+                    }
+                    for(int j = 0; j < 30; j++){
+                        printf(" ");
+                    }
+                    printf("Hit The Oldest Item!");
+                    //stop for .05 seconds
+                    Sleep(75);
+                    system("cls");
+                }
+                printf("\e[25m");
+                printf("\e[?25l");
+                continue;
+            }
+            else{
+                for(int i = 0; i < 5; i++){
+                    createRoamUI();
+                    createBoxNoClear();
+                    if((i % 2) == 0){
+                        //red
+                        printf("\e[38;5;196m");
+                    }
+                    else{
+                        //white
+                        printf("\e[38;5;255m");
+                    }
+                    for(int j = 0; j < 30; j++){
+                        printf(" ");
+                    }
+                    printf("Hit The Newest Item!");
+                    //stop for .05 seconds
+                    Sleep(75);
+                    system("cls");
+                }
+                printf("\e[25m");
+                printf("\e[?25l");
+                continue;
+            }
+        }   
+        /*else if((holdCurrChar == 's') || (holdCurrChar == 'S')){
+            createRoamUI();
+            createBoxNoClear();
+        }*/
     }
 }
 
@@ -257,7 +326,7 @@ void userInputAction(dllist list){
         }
         else if(!strcmp(currentString, "ROAM")){
             //starts roaming mode 
-            userInputRoam();
+            userInputRoam(list);
         }
         else if(!strcmp(currentString, "bye!")){
             break;
@@ -588,6 +657,11 @@ return(NULL);
 
     
 int main(void){
+    //ensures that escape codes work properly regardless of what program runs before it 
+    consoleEscapeCodeSetup();
+    //hides cursor
+    printf("\e[?25l");
+    //to reenable it use printf("\e[?25h");
     //sets random seed to a random value 
     srand(time(NULL));
     introInstruct();
