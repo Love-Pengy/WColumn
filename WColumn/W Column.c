@@ -277,6 +277,7 @@ void userInputRoam(dllist list){
                 }
                 printf("\e[25m");
                 printf("\e[?25l");
+                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
                 continue;
             }
         }   
@@ -311,6 +312,7 @@ void userInputRoam(dllist list){
                 //try to read in a string to stop getche from getting the inputs that were given during this time
                 printf("\e[25m");
                 printf("\e[?25l");
+                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
                 continue;
             }
         }   
@@ -325,6 +327,7 @@ void userInputRoam(dllist list){
                     continue;
                 }
                 removeAtIndex(list, currentIndex);
+                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
                 continue;
             }
             else{
@@ -370,6 +373,8 @@ void userInputRoam(dllist list){
             createBoxNoClear();
         }*/
     }
+    //flushes the input given in the console (AKA fflush() but actually works)
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
 void userInputAction(dllist list){ 
