@@ -308,6 +308,7 @@ void userInputRoam(dllist list){
                     Sleep(75);
                     system("cls");
                 }
+                //try to read in a string to stop getche from getting the inputs that were given during this time
                 printf("\e[25m");
                 printf("\e[?25l");
                 continue;
@@ -374,13 +375,18 @@ void userInputRoam(dllist list){
 void userInputAction(dllist list){ 
     for(int i = 0; i < MAXWS; i++){
         //printf("userinputAction for loop top");
-        setRandomCLIColor();
+        if(i != 0){
+            setRandomCLIColor();
+        }
         char* currentString = malloc(sizeof(char) * 82);
         if(i == 0){
             //prompt user for how to input information
             userInputPrompt();
         }
         //take user input and add it to the dllist
+        if(i == 0){
+            setRandomCLIColor();
+        }
         currentString = userInputString();
         if(currentString == NULL){
             continue;
@@ -561,10 +567,10 @@ dllist loadWs(FILE *fp){
         int returning = 0;
         returning = checkReturnUser();
         if(returning == 0){
-        dllist d = initList();
-        rewind(fp);
-        fprintf(fp, "~W Column App By LovePengy~\n");
-        return(d);
+            dllist d = initList();
+            rewind(fp);
+            fprintf(fp, "~W Column App By LovePengy~\n");
+            return(d);
         }
 
         else{
@@ -667,8 +673,11 @@ dllist loadWs(FILE *fp){
         }
         }
     }
-
     else{
+        if(checkIdent(strChecker2)){
+            dllist d = initList();
+            return(d);
+        }
         //printf("\nHERE\n");
         dllist d = initList();
         fp = fopen("wcolhold.txt", "w");
