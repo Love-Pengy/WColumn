@@ -70,6 +70,16 @@ int consoleEscapeCodeSetup(void){
     }
     return 0;
 }
+
+int stringLengthNoSpace(char *string){
+    int length = 0; 
+    for(int i = 0; i < (strlen(string)); i++){
+        if(!(isspace(string[i]))){
+            length++;
+        }
+    }
+    return(length);
+}
 //returns the int that corresponds to the next color. 
 void randColorDuplicateDestroyer(void){
     if((randColor != true) && (color != 4)){
@@ -215,6 +225,16 @@ void createBoxNoClear(void){
     fillBottom();
     //move up 5 lines
     printf("\e[5A");
+    //move left 79 lines
+    printf("\e[79D");
+}
+
+void createEditBoxNoClear(void){
+    fillTop();
+    fillSides();
+    fillBottom();
+    //move up 5 lines
+    printf("\e[7A");
     //move left 79 lines
     printf("\e[79D");
 }
@@ -368,10 +388,32 @@ void userInputRoam(dllist list){
         else if((holdCurrChar == 'r') || (holdCurrChar == 'R')){
             exit = 1;
         }
-        /*else if((holdCurrChar == 's') || (holdCurrChar == 'S')){
+        else if((holdCurrChar == 'e') || (holdCurrChar == 'E')){
+            char *buffer = malloc(sizeof(char) * LSIZE);
+            system("cls");
             createRoamUI();
-            createBoxNoClear();
-        }*/
+            createEditBoxNoClear();
+            char * hold = getItemAtIndex(list, currentIndex);
+            printf("%s\n", hold);
+            //move to the right one line (doesnt override boundary because nothing was written)
+            printf("\e[1C");
+            int size = stringLengthNoSpace(hold); 
+            for(int i = 0; i < size; i++){
+                if((i % 2) == 0){
+                    printf("v ");
+                }
+            }
+            printf("\n");
+            printf("\e[1C");
+            gets(buffer);
+            if((buffer == NULL) || (buffer[0] == '\n')){
+                continue;
+            }
+            replaceAtIndex(list, currentIndex, buffer);
+        }
+        else{ 
+            continue;
+        }
     }
     //flushes the input given in the console (AKA fflush() but actually works)
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
