@@ -394,15 +394,18 @@ void userInputRoam(dllist list){
             createRoamUI();
             createEditBoxNoClear();
             char * hold = getItemAtIndex(list, currentIndex);
+            printf("\e[38;5;197m");
             printf("%s\n", hold);
             //move to the right one line (doesnt override boundary because nothing was written)
             printf("\e[1C");
             int size = stringLengthNoSpace(hold); 
+            printf("\e[38;5;76m");
             for(int i = 0; i < size; i++){
                 if((i % 2) == 0){
                     printf("v ");
                 }
             }
+            printf("\e[0m");
             printf("\n");
             printf("\e[1C");
             gets(buffer);
