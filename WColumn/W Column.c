@@ -10,7 +10,7 @@
 //max line size
 #define LSIZE 300
 //max W's 200
-#define MAXWS 200
+#define MAXWS 200   
 //max string size in chars
 #define MAXSTRSIZE 80
 
@@ -72,6 +72,9 @@ int consoleEscapeCodeSetup(void){
     return 0;
 }
 
+int getTotalCount(dllist d){
+        return(listSize(d));
+}
 int getSessionCount(dllist d, int original){
         int hold = (listSize(d) - original);
         if(hold < 0){
@@ -806,7 +809,8 @@ int main(void){
     userInputAction(wList);
     system("cls");
     //printList(wList);
-    printf("The amount of W's before this session was: %d\n", getSessionCount(wList, originalWs)); 
+    printf("The amount of W's this session was: %d\n", getSessionCount(wList, originalWs)); 
+    printf("This means you have %d total W's!\n", getTotalCount(wList));
     printf("\e[?25h");
     clearList(wList);
     printf("End.");
