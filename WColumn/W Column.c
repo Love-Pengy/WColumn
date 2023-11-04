@@ -807,6 +807,27 @@ int main(void){
         setRandomCLIColor();
     }*/
     userInputAction(wList);
+    //start of anim testing
+    /*
+    char test[100] = "animations/success1/frame1";
+    FILE * testFp = fopen(test, "r"); 
+    fseek(testFp, 0, SEEK_END); 
+    int size = ftell(testFp); 
+    rewind(testFp); 
+    char * hold = malloc(size + 1); 
+    fread(hold, size, 1, testFp); 
+    rewind(testFp);
+    printf("%s", hold);
+    int whatever = 0;
+    scanf("%d", &whatever);
+    for(int i = 0; i < 10; i++){
+	system("cls");
+	createBox(); 
+	system("cls");
+	printf("%s", hold); 
+    }
+    */
+
     system("cls");
     //printList(wList);
     printf("The amount of W's this session was: %d\n", getSessionCount(wList, originalWs)); 
