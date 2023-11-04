@@ -24,7 +24,6 @@ int consoleEscapeCodeSetup(void){
     {
         return false;
     }
-
     DWORD dwRequestedOutModes = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
     DWORD dwRequestedInModes = ENABLE_VIRTUAL_TERMINAL_INPUT;
 

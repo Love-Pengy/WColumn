@@ -18,7 +18,8 @@
 int color = 0; 
 //global randBool for randColor 
 bool randColor = false;
-
+//global count for original W's
+int originalWs = 0; 
 //go back to this later cause you have negative clue what this does but it works :3
 //https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 //HANDLE type is a reference that allows you to access a resource
@@ -70,6 +71,15 @@ int consoleEscapeCodeSetup(void){
     }
     return 0;
 }
+
+int getSessionCount(dllist d, int original){
+        int hold = (listSize(d) - original);
+        if(hold < 0){
+                return(0);
+        }
+        return(hold);
+}
+
 
 int stringLengthNoSpace(char *string){
     int length = 0; 
@@ -789,12 +799,14 @@ int main(void){
     fptr = fopen("wcolhold.txt", "a+");
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
+    originalWs = listSize(wList); 
     /*for(int i = 0; i < 10; i++){
         setRandomCLIColor();
     }*/
     userInputAction(wList);
     system("cls");
-    printList(wList);
+    //printList(wList);
+    printf("The amount of W's before this session was: %d\n", getSessionCount(wList, originalWs)); 
     printf("\e[?25h");
     clearList(wList);
     printf("End.");
