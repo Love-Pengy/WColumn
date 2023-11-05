@@ -544,12 +544,6 @@ int checkIdent(char *str){
     return(0);
 }
 
-char * trailingNLDestroyer(char *str){
-    //strcspn returns the value where the inputed value is found
-    str[strcspn(str, "\n")] = '\0';
-    return(str);
-}
-
 //get rid of whitespace in strings
 char * stringParse(char *pString){
     //printf("DEBUG1!!%s\n", pString);
