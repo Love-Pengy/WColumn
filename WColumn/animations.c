@@ -8,6 +8,8 @@ char baseDir[30] = "animations/";
 
 int DEBUG = 0;
 
+int colors[] = {51, 84, 213, 227};
+
 struct anim{
         int size; 
         char ** frames; 
@@ -24,6 +26,14 @@ struct animationManager{
 };
 typedef struct animationManager * manager; 
 
+void setColor(void){
+        int randomVal = (rand() % (sizeof(colors)/sizeof(int))); 
+        printf("\e[38;5;%dm", randomVal); 
+}
+
+void resetColor(void){
+        printf("\e[0m");
+}
 //OUR SAVIOR, THE CHARMING TRAILINGNLDESTROYER, THE SAVER OF WORLDS, DESTROYER OF EVIL;
 char * trailingNLDestroyer(char *str){
     //strcspn returns the value where the inputed value is found
@@ -44,10 +54,9 @@ void playRandAnimation(manager manage){
                 printf("NUM ANIMATIONS: %d, RAND VALUE: %d\n", manage->numAnimations, picker); 
                 int something = 0;
                 scanf("%d", &something);
-
-
         }
         system("cls");
+        setColor();
         for(int i = 0; i < manage->anims[picker]->size; i++){ 
                 holdFp = fopen(manage->anims[picker]->frames[i], "r");
                 if(DEBUG){
@@ -62,6 +71,7 @@ void playRandAnimation(manager manage){
                 Sleep(50);
                 system("cls");
         }
+        resetColor();
 }
 
 void append(animation appendee, char* newPath){
