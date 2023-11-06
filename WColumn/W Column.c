@@ -785,8 +785,11 @@ return(NULL);
 
 
 
-
-
+void dumpWs(dllist dl, FILE * fp){
+        for(int i = 0; i < listSize(dl); i++){
+                fprintf(fp, "%s\n", getItemAtIndex(dl, i));
+        }
+}
 
 
 
@@ -814,8 +817,8 @@ int main(void){
     printf("The amount of W's this session was: %d\n", getSessionCount(wList, originalWs)); 
     printf("This means you have %d total W's!\n", getTotalCount(wList));
     printf("\e[?25h");
+    dumpWs(wList, fptr);
     clearList(wList);
-    printf("End.");
     fclose(fptr);
     return 0; 
 }

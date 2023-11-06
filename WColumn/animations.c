@@ -45,7 +45,7 @@ char * trailingNLDestroyer(char *str){
 }
 
 void playRandAnimation(manager manage){
-        srand(rand()); 
+        srand(time(NULL)); 
         FILE * holdFp;
         char * hold;
         int picker = (rand() % manage->numAnimations);
