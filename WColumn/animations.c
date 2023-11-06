@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
+//#include <unistd.h>
 char baseDir[30] = "animations/"; 
 
 int DEBUG = 0;
@@ -43,7 +43,7 @@ void playRandAnimation(manager manage){
 
 
         }
-        system("clear");
+        System("cls");
         for(int i = 0; i < manage->anims[picker]->size; i++){ 
                 holdFp = fopen(manage->anims[picker]->frames[i], "r");
                 if(DEBUG){
@@ -55,7 +55,7 @@ void playRandAnimation(manager manage){
                 hold = malloc(size +1); 
                 fread(hold, size, 1, holdFp); 
                 printf("%s", hold);
-                sleep(1);
+                sleep(50);
                 system("clear");
         }
 }
