@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <time.h>
 #include <windows.h>
+#include "animations.h"
 //max line size
 #define LSIZE 300
 //max W's 200
@@ -435,7 +436,9 @@ void userInputRoam(dllist list){
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
-void userInputAction(dllist list){ 
+void userInputAction(dllist list){
+        manager bossyBoss = initManager();
+        animationSetup(bossyBoss);
     for(int i = 0; i < MAXWS; i++){
         //printf("userinputAction for loop top");
         if(i != 0){
@@ -463,6 +466,7 @@ void userInputAction(dllist list){
         }
         else{
             addList(currentString, list);
+            playRandAnimation(bossyBoss); 
         }
     }
 }
@@ -796,32 +800,8 @@ int main(void){
     fptr = fopen("wcolhold.txt", "a+");
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
-    originalWs = listSize(wList); 
-    /*for(int i = 0; i < 10; i++){
-        setRandomCLIColor();
-    }*/
+    originalWs = listSize(wList);    
     userInputAction(wList);
-    //start of anim testing
-    /*
-    char test[100] = "animations/success1/frame1";
-    FILE * testFp = fopen(test, "r"); 
-    fseek(testFp, 0, SEEK_END); 
-    int size = ftell(testFp); 
-    rewind(testFp); 
-    char * hold = malloc(size + 1); 
-    fread(hold, size, 1, testFp); 
-    rewind(testFp);
-    printf("%s", hold);
-    int whatever = 0;
-    scanf("%d", &whatever);
-    for(int i = 0; i < 10; i++){
-	system("cls");
-	createBox(); 
-	system("cls");
-	printf("%s", hold); 
-    }
-    */
-
     system("cls");
     //printList(wList);
     printf("The amount of W's this session was: %d\n", getSessionCount(wList, originalWs)); 
