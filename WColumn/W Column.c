@@ -786,6 +786,7 @@ return(NULL);
 
 
 void dumpWs(dllist dl, FILE * fp){
+        rewind(fp);
         for(int i = 0; i < listSize(dl); i++){
                 fprintf(fp, "%s\n", getItemAtIndex(dl, i+1));
         }
