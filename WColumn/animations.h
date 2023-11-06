@@ -15,4 +15,5 @@ animation initAnimation(void);
 manager initManager(void); 
 
 void animationSetup(manager); 
- 
+
+char * trailingNLDestroyer(char *); 
