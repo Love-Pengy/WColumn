@@ -6,7 +6,7 @@
 //#include <unistd.h>
 char baseDir[30] = "animations/"; 
 
-int DEBUG = 1;
+int DEBUG = 0;
 
 int colors[] = {51, 84, 213, 227};
 
@@ -27,11 +27,11 @@ struct animationManager{
 typedef struct animationManager * manager; 
 
 void setColor(void){
-        int randomVal = (rand() % (sizeof(colors)/sizeof(int))) - 1; 
+        int randomVal = (rand() % (sizeof(colors)/sizeof(int))); 
         if(DEBUG){
                 printf("SETCOLOR: %d\n", randomVal);
         }
-        printf("\e[38;5;%dm", randomVal); 
+        printf("\e[38;5;%dm", colors[randomVal]); 
 }
 
 void resetColor(void){
