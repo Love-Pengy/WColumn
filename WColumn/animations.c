@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <windows.h>
 //#include <unistd.h>
 char baseDir[30] = "animations/"; 
 
@@ -35,6 +36,9 @@ void playRandAnimation(manager manage){
         FILE * holdFp;
         char * hold;
         int picker = (rand() % manage->numAnimations);
+        //printf("PICKER: %d\n", manage->numAnimations);
+        //int whatever = 0;
+        //scanf("%d", &whatever);
         if(DEBUG){
                 picker = 2;
                 printf("NUM ANIMATIONS: %d, RAND VALUE: %d\n", manage->numAnimations, picker); 
@@ -43,7 +47,7 @@ void playRandAnimation(manager manage){
 
 
         }
-        System("cls");
+        system("cls");
         for(int i = 0; i < manage->anims[picker]->size; i++){ 
                 holdFp = fopen(manage->anims[picker]->frames[i], "r");
                 if(DEBUG){
@@ -55,8 +59,8 @@ void playRandAnimation(manager manage){
                 hold = malloc(size +1); 
                 fread(hold, size, 1, holdFp); 
                 printf("%s", hold);
-                sleep(50);
-                system("clear");
+                Sleep(50);
+                system("cls");
         }
 }
 
@@ -136,8 +140,8 @@ void animationSetup(manager boss){
                 }
                 append(currAnim, hold);
         }
-                boss->anims[boss->numAnimations] = currAnim; 
-                boss->numAnimations++; 
+                //boss->anims[boss->numAnimations] = currAnim; 
+                //boss->numAnimations++; 
 
 
 }

@@ -260,7 +260,14 @@ char * userInputString(){
     printf("\e[0m");
     printf("\e[?25l");
     gets(input);
-    //printf("Inputed String: %s\n", test);
+    //printf("Inputed String: %s\n", input);
+    if(strlen(input) == 0){
+        return(NULL);
+    }
+    //printf("INPUT: %lld", (strlen(input)));
+    //printf("~~~~~~~~~~");
+    //int something = 0;
+    //scanf("%d", &something);
     return(input);
 }
 
