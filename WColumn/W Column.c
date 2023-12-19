@@ -21,6 +21,13 @@ int color = 0;
 bool randColor = false;
 //global count for original W's
 int originalWs = 0; 
+//global var for current file path 
+char currentFilePath[300] = "";
+
+
+
+
+
 //go back to this later cause you have negative clue what this does but it works :3
 //https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 //HANDLE type is a reference that allows you to access a resource
@@ -645,13 +652,13 @@ dllist loadWs(FILE *fp){
         int finLoop = 0;
         while(finLoop == 0){
         char* dir = getDir();
+        strcpy(currentFilePath, dir);
         fp = fopen(dir, "r");
             if(fp != NULL){
             fseek(fp, 0, SEEK_END);
             size = ftell(fp);
             rewind(fp);
             char *strChecker = malloc(sizeof(char) * 160);
-            fgets(strChecker, LSIZE, fp);
             strChecker = trailingNLDestroyer(strChecker);
                 if(size == 0 || (checkIdent(strChecker) == 0) || (!checkText(dir))){
                     int hold = 0;
@@ -666,13 +673,14 @@ dllist loadWs(FILE *fp){
                                 //printf("if\n\n");
                                 fclose(fp);
                                 fp = fopen(textAdd(dir), "w");
+                                strcpy(currentFilePath, textAdd(dir));
                             }
                             
                             else{
                                 //printf("else\n\n");
                                 fclose(fp);
-                                printf("else test: %s\n\n", dir);
                                 fp = fopen(dir, "w");
+                                strcpy(currentFilePath, dir);
                             }
                             dllist d = initList();
                             fprintf(fp,"~W Column App By LovePengy~\n");
@@ -680,6 +688,7 @@ dllist loadWs(FILE *fp){
                         }
                         else if(hold == 2){
                             fp = fopen("wcolhold.txt", "w"); 
+                            strcpy(currentFilePath, "wcolhold.txt");
                             dllist d = initList();
                             fprintf(fp,"~W Column App By LovePengy~\n");
                             return(d);
@@ -694,6 +703,7 @@ dllist loadWs(FILE *fp){
                 else{
                     fclose(fp);
                     fp = fopen(dir, "a+");
+                    strcpy(currentFilePath, dir);
                     dllist d = initList();
                     //printf("test: %d\n", fp==NULL);
                     char* sTemp = malloc(sizeof(char) * 81);
@@ -722,6 +732,7 @@ dllist loadWs(FILE *fp){
                     if(!checkText(dir)){
                                 fclose(fp);
                                 fp = fopen(textAdd(dir), "w");
+                                strcpy(currentFilePath, textAdd(dir));
                             }
                             dllist d = initList();
                             fprintf(fp,"~W Column App By LovePengy~\n");
@@ -730,6 +741,7 @@ dllist loadWs(FILE *fp){
 
                 else if(grubbyHandGrabber == 2){
                     fp = fopen("wcolhold.txt", "w");
+                    strcpy(currentFilePath, "wcolhold.txt");
                     fprintf(fp, "~W Column App By LovePengy~\n");
                     dllist d = initList();
                     return(d);
@@ -742,37 +754,32 @@ dllist loadWs(FILE *fp){
         }
     }
     else{
-        if(checkIdent(strChecker2)){
+        if(size == 0){
             dllist d = initList();
+            fp = fopen("wcolhold.txt", "w");
+            strcpy(currentFilePath, "wcolhold.txt");
             return(d);
         }
-        //printf("\nHERE\n");
-        dllist d = initList();
-        fp = fopen("wcolhold.txt", "w");
-        fprintf(fp, "~W Column App By LovePengy~\n");
-        //rewind(fp);
-        //fp = freopen(NULL, "w", fp);
-        char* sTemp = malloc(sizeof(char) * 81);
-        fgets(sTemp, 80, fp);
-        sTemp = malloc(sizeof(char) * 81);
-        while(1){
-            //printf("here\n");
+        if(checkIdent(strChecker2) && (size != 0)){
+            //need to go through and load up the W's
+            dllist d = initList();
+            char* sTemp = malloc(sizeof(char) * 81);
             fgets(sTemp, 80, fp);
-            sTemp = trailingNLDestroyer(sTemp);
-            if(feof(fp)){
-                break;
+            sTemp = malloc(sizeof(char) * 81);
+            while(1){
+                //printf("here\n");
+                fgets(sTemp, 80, fp);
+                sTemp = trailingNLDestroyer(sTemp);
+                if(feof(fp)){
+                    break;
+                }
+                else{
+                    sTemp = stringParse(sTemp);
+                    addList(sTemp, d);
+                }
             }
-            else{
-                sTemp = stringParse(sTemp);
-                addList(sTemp, d);
-            }
-
+            return(d);
         }
-        /*fgets(sTemp, LSIZE, fp);
-        sTemp = trailingNLDestroyer(sTemp);
-        sTemp = stringParse(sTemp);
-        addList(sTemp, d);*/
-        return(d);
     }
 }
     else{
@@ -786,7 +793,8 @@ return(NULL);
 
 
 void dumpWs(dllist dl, FILE * fp){
-        rewind(fp);
+        fclose(fp);
+        fp = fopen(currentFilePath, "w");  
         for(int i = 0; i < listSize(dl); i++){
                 fprintf(fp, "%s\n", getItemAtIndex(dl, i+1));
         }
@@ -809,6 +817,7 @@ int main(void){
     introInstruct();
     FILE* fptr;
     fptr = fopen("wcolhold.txt", "a+");
+    
     //a+ opens file for both reading and appending d
     dllist wList = loadWs(fptr);
     originalWs = listSize(wList);    

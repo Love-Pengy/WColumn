@@ -119,7 +119,6 @@ manager initManager(void){
 }
 
 void animationSetup(manager boss){
-        char * filePath = malloc(sizeof(char) * 100);
         FILE * fptr = fopen("animations/manage.txt", "r");
         char * hold = malloc(sizeof(char) * 100);
         animation currAnim = initAnimation();
