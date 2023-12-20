@@ -497,14 +497,17 @@ char *textAdd(char *str){
     if(strchr(str, '.') == NULL){
         strcpy(textAdd, str);
         strcat(textAdd, ".txt");
+        printf("NOT FINDING . CHAR");
         return(textAdd);
     }
     char* end = malloc(sizeof(char) * 10);
-    end = strchr(str, '.');
+    //get last occurance
+    end = strrchr(str, '.');
     int sizeEnd = strlen(end);
-    for(int i = 0; i < size - sizeEnd; i++){
+    for(int i = 0; i < (size - sizeEnd); i++){
         textAdd[i] = str[i];
     }
+    textAdd[(strlen(str) - strlen(end))] = '\0';
     strcat(textAdd, ".txt");
     return(textAdd);
 }
@@ -527,7 +530,6 @@ int checkText(char *str){
 
 int checkIdent(char *str){
     char strCheck[50];
-    //printf("TEST: %s\n", str);
     strcpy(strCheck, "~W Column App By LovePengy~");
     if(!strcmp(str, strCheck)){
         return(1); 
@@ -562,13 +564,14 @@ char * stringParse(char *pString){
 
 void introInstruct(){
     char hold;
-    printf("Hello! This app is inspired by Dr. K's talk about turning w's into l's (https://twitter.com/HealthyGamerGG/status/1615857210638180353?s=200).\n This app is designed to help you keep track of your w's and put them in your respective \"column\"! \n");
-    printf("~~Press any key to continue~~");
-    scanf("%c", &hold);
     system("cls");
-    printf("You will see your W column show up, when that happens you will have the opportunity to type in all of your W's into your column! whether it be big or small a W is a W! Go ahead and type it out! After each W you type in hit enter and your box will close and hold the W for later viewing! When done you can type -1 and you will get your recap for the day!\n");
+    printf("Hello! This app is inspired by Dr. K's talk about turning w's into l's (https://twitter.com/HealthyGamerGG/status/1615857210638180353?s=200).\nThis app is designed to help you keep track of your w's and put them in your respective \"column\"! \n");
     printf("~~Press any key to continue~~");
-    scanf("%c", &hold);
+    hold = getch();
+    system("cls");
+    printf("You will first see a colored box show up that will allow you to input your W!\n");
+    printf("~~Press any key to continue~~");
+    hold = getch();
     system("cls");
 }
 
@@ -623,12 +626,13 @@ dllist loadWs(FILE *fp){
             size = ftell(fp);
             rewind(fp);
             char *strChecker = malloc(sizeof(char) * 160);
+            fgets(strChecker, LSIZE, fp);
             strChecker = trailingNLDestroyer(strChecker);
                 if(size == 0 || (checkIdent(strChecker) == 0) || (!checkText(dir))){
+                    printf("size: %d, ident: %d, checkText: %d\n", size, checkIdent(strChecker), (!checkText(dir)));
                     int hold = 0;
                     printf("That File Is Empty Or Not Formatted Correctly! Would You Like To Continue With This Directory(1), continue with the default directory(2), or pick another directory(3)?\n");
-                    printf("NOTE: Continuing with this directory will delete everything within this file. \n");
-                
+                    printf("NOTE: Continuing with this directory will delete everything within this file. \n"); 
                     scanf(" %d", &hold);
                         if(hold == 1){
                             if(!checkText(dir)){
@@ -654,17 +658,21 @@ dllist loadWs(FILE *fp){
                             return(d);
                         }
                         else{ 
+                            printf("Invalid Option! Please Try Again!\n");
                             continue;
                         }
                     printf("File is empty \n");
                     continue;
                 }
                 else{
+                    printf("HERE\n");
+                    getch();
                     fclose(fp);
                     fp = fopen(dir, "a+");
                     strcpy(currentFilePath, dir);
                     dllist d = initList();
                     char* sTemp = malloc(sizeof(char) * 81);
+                    fgets(sTemp, LSIZE, fp);
                         while(1){
                         fgets(sTemp, LSIZE, fp);
                         sTemp = trailingNLDestroyer(sTemp);
@@ -750,7 +758,6 @@ return(NULL);
 
 void dumpWs(dllist dl, FILE * fp){
         fclose(fp);
-        printf("TEST: %s\n", currentFilePath); 
         fp = fopen(currentFilePath, "w");  
         fprintf(fp, "~W Column App By LovePengy~\n");
         if(listSize(dl) != 0){
