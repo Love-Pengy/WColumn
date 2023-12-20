@@ -3,7 +3,6 @@
 #include <string.h>
 #include <time.h>
 #include <windows.h>
-//#include <unistd.h>
 char baseDir[30] = "animations/"; 
 
 int DEBUG = 0;
@@ -37,9 +36,7 @@ void setColor(void){
 void resetColor(void){
         printf("\e[0m");
 }
-//OUR SAVIOR, THE CHARMING TRAILINGNLDESTROYER, THE SAVER OF WORLDS, DESTROYER OF EVIL;
 char * trailingNLDestroyer(char *str){
-    //strcspn returns the value where the inputed value is found
     str[strcspn(str, "\n")] = '\0';
     return(str);
 }
@@ -49,9 +46,6 @@ void playRandAnimation(manager manage){
         FILE * holdFp;
         char * hold;
         int picker = (rand() % manage->numAnimations);
-        //printf("PICKER: %d\n", manage->numAnimations);
-        //int whatever = 0;
-        //scanf("%d", &whatever);
         if(DEBUG){
                 picker = 2;
                 printf("NUM ANIMATIONS: %d, RAND VALUE: %d\n", manage->numAnimations, picker); 
@@ -87,8 +81,6 @@ void append(animation appendee, char* newPath){
 }
 
 
-//filenames will come from a file within the folder for the animation
-//take basedir and add the next file name onto it
 char * animationCreator(char * dir, char * fileName){
         char * hold = malloc(sizeof(char) * (strlen(dir) + strlen(fileName))); 
         strcpy(hold, dir);
@@ -97,8 +89,6 @@ char * animationCreator(char * dir, char * fileName){
                 printf("AnimationCreator Dir: %s, dir: %s, fileName: %s",  hold, dir, fileName);
         }
         return(hold);
-        //int numFrames = 0;
-        //printf("TEST: %s\n", filePath);
 }
 
 animation initAnimation(void){
@@ -152,8 +142,6 @@ void animationSetup(manager boss){
                 }
                 append(currAnim, hold);
         }
-                //boss->anims[boss->numAnimations] = currAnim; 
-                //boss->numAnimations++; 
 
 
 }

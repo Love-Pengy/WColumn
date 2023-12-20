@@ -19,20 +19,14 @@
 int color = 0; 
 //global randBool for randColor 
 bool randColor = false;
-//global count for original W's
 int originalWs = 0; 
-//global var for current file path 
 char currentFilePath[300] = "";
 
 
 
 
 
-//go back to this later cause you have negative clue what this does but it works :3
-//https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-//HANDLE type is a reference that allows you to access a resource
 int consoleEscapeCodeSetup(void){
-    // Set output mode to handle virtual terminal sequences
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hOut == INVALID_HANDLE_VALUE)
     {
@@ -61,12 +55,10 @@ int consoleEscapeCodeSetup(void){
     DWORD dwOutMode = dwOriginalOutMode | dwRequestedOutModes;
     if (!SetConsoleMode(hOut, dwOutMode))
     {
-        // we failed to set both modes, try to step down mode gracefully.
         dwRequestedOutModes = ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         dwOutMode = dwOriginalOutMode | dwRequestedOutModes;
         if (!SetConsoleMode(hOut, dwOutMode))
         {
-            // Failed to set any VT mode, can't do anything here.
             return -1;
         }
     }
@@ -74,7 +66,6 @@ int consoleEscapeCodeSetup(void){
     DWORD dwInMode = dwOriginalInMode | dwRequestedInModes;
     if (!SetConsoleMode(hIn, dwInMode))
     {
-        // Failed to set VT input mode, can't do anything here.
         return -1;
     }
     return 0;
@@ -85,9 +76,6 @@ int getTotalCount(dllist d){
 }
 int getSessionCount(dllist d, int original){
         int hold = (listSize(d) - original);
-        if(hold < 0){
-                return(0);
-        }
         return(hold);
 }
 
@@ -141,7 +129,6 @@ void setRandomCLIColor(void){
 }
 
 void userInputPrompt(void){
-    //clear screen 
     system("cls");
     printf("You are about to enter input mode!\n");
     printf("To add a W you just type what you want and hit enter!\n");
@@ -156,8 +143,6 @@ void userInputPrompt(void){
 }
 
 void fillTop(void){
-    //printf("\e[38;5;123m");
-    //printf("\e[38;5;219m");
     printf(" ");
     for(int i = 0; i < 79; i++){
         printf("-");
@@ -194,7 +179,6 @@ void createRoamUI(void){
     printf("\e[1m");
     printf("\e[48;5;230m");
     printf("\e[38;5;232m");  
-      //fflush(stdout);
     printf("MOVE: w & s");
     printf("\e[0m");
     printf("\e[?25l");
@@ -244,9 +228,7 @@ void createBoxNoClear(void){
     fillTop();
     fillSides();
     fillBottom();
-    //move up 5 lines
     printf("\e[5A");
-    //move left 79 lines
     printf("\e[79D");
 }
 
@@ -254,9 +236,7 @@ void createEditBoxNoClear(void){
     fillTop();
     fillSides();
     fillBottom();
-    //move up 5 lines
     printf("\e[7A");
-    //move left 79 lines
     printf("\e[79D");
 }
 
@@ -267,14 +247,9 @@ char * userInputString(){
     printf("\e[0m");
     printf("\e[?25l");
     gets(input);
-    //printf("Inputed String: %s\n", input);
     if(strlen(input) == 0){
         return(NULL);
     }
-    //printf("INPUT: %lld", (strlen(input)));
-    //printf("~~~~~~~~~~");
-    //int something = 0;
-    //scanf("%d", &something);
     return(input);
 }
 
@@ -288,7 +263,6 @@ void userInputRoam(dllist list){
     char holdCurrChar = ' ';
     int exit = 0;
     while(!exit){
-        //need function to create box an write roamed string in
         createRoamUI();
         createBoxNoClear();
         printf("%s", getItemAtIndex(list, currentIndex));
@@ -319,7 +293,6 @@ void userInputRoam(dllist list){
                         printf(" ");
                     }
                     printf("Hit The Oldest Item!");
-                    //stop for .05 seconds
                     Sleep(75);
                     system("cls");
                 }
@@ -342,24 +315,21 @@ void userInputRoam(dllist list){
                     createRoamUI();
                     createBoxNoClear();
                     if((i % 2) == 0){
-                        //red
                         printf("\e[38;5;196m");
                     }
                     else{
-                        //white
                         printf("\e[38;5;255m");
                     }
                     for(int j = 0; j < 30; j++){
                         printf(" ");
                     }
                     printf("Hit The Newest Item!");
-                    //stop for .05 seconds
                     Sleep(75);
                     system("cls");
                 }
-                //try to read in a string to stop getche from getting the inputs that were given during this time
                 printf("\e[25m");
                 printf("\e[?25l");
+                //clear inputs that happened during invalid period 
                 FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
                 continue;
             }
@@ -383,18 +353,15 @@ void userInputRoam(dllist list){
                     createRoamUI();
                     createBoxNoClear();
                     if((i % 2) == 0){
-                        //red
                         printf("\e[38;5;196m");
                     }
                     else{
-                        //white
                         printf("\e[38;5;255m");
                     }
                     for(int j = 0; j < 30; j++){
                         printf(" ");
                     }
                     printf("!!Removing Last Item!!");
-                    //stop for .05 seconds
                     Sleep(75);
                     system("cls");
                     for(int j = 0; j < 30; j++){
@@ -446,24 +413,20 @@ void userInputRoam(dllist list){
             continue;
         }
     }
-    //flushes the input given in the console (AKA fflush() but actually works)
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 }
 
 void userInputAction(dllist list){
-        manager bossyBoss = initManager();
-        animationSetup(bossyBoss);
+    manager bossyBoss = initManager();
+    animationSetup(bossyBoss);
     for(int i = 0; i < MAXWS; i++){
-        //printf("userinputAction for loop top");
         if(i != 0){
             setRandomCLIColor();
         }
         char* currentString = malloc(sizeof(char) * 82);
         if(i == 0){
-            //prompt user for how to input information
             userInputPrompt();
         }
-        //take user input and add it to the dllist
         if(i == 0){
             setRandomCLIColor();
         }
@@ -472,8 +435,32 @@ void userInputAction(dllist list){
             continue;
         }
         else if(!strcmp(currentString, "ROAM")){
-            //starts roaming mode 
-            userInputRoam(list);
+            if(listSize(list) == 0){
+                for(int i = 0; i < 5; i++){
+                    createRoamUI();
+                    createBoxNoClear();
+                    if((i % 2) == 0){
+                        printf("\e[38;5;196m");
+                    }
+                    else{
+                        printf("\e[38;5;255m");
+                    }
+                    for(int j = 0; j < 30; j++){
+                        printf(" ");
+                    }
+                    printf("Not Enough W's To ROAM!");
+                    Sleep(75);
+                    system("cls");
+                }
+                printf("\e[25m");
+                printf("\e[?25l");
+                FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+                continue;
+                printf("\e[38;5;196m"); 
+            }
+            else{
+                userInputRoam(list);
+            }
         }
         else if(!strcmp(currentString, "bye!")){
             break;
@@ -481,6 +468,7 @@ void userInputAction(dllist list){
         else{
             addList(currentString, list);
             playRandAnimation(bossyBoss); 
+            FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
         }
     }
 }
@@ -503,9 +491,7 @@ int invalFilePrompt(void){
     }
 }
 
-//add .txt to files without a file extension or change the file extention to .txt if one exists but isnt a text extention 
 char *textAdd(char *str){
-    //printf("got to text add\n");
     int size = strlen(str);
     char *textAdd = malloc(sizeof(char)* (size + 4));
     if(strchr(str, '.') == NULL){
@@ -524,7 +510,6 @@ char *textAdd(char *str){
 }
 
 
-//Check for .txt file extention 1 if txt 0 if not
 int checkText(char *str){
     char * newString = malloc(sizeof(char) * strlen(str));
     strcpy(newString, str);
@@ -534,24 +519,12 @@ int checkText(char *str){
         strcpy(lastToken, token);
         token = strtok(NULL, ".");
     }
-    //printf("TEST WHILE: %s\n", lastToken);
     if(!strcmp(lastToken, "txt")){
         return 1;
     }
     return 0;
-    //int size = strlen(str);
-    //printf("TOKEN TEST: %d\n", str == NULL);
-    //printf("TEST: %s\n", token);
-    //printf("TEST2: (token size): %lld (str size): %lld \n", strlen(token), strlen(str));
-    /*if(token == NULL || (strlen(token) == strlen(str))){
-        printf("exit clause\n");
-        return(0);
-    }
-return(0);*/
-
 }
 
-//Check For Identifier 0 if no identifier 1 if identifier 
 int checkIdent(char *str){
     char strCheck[50];
     //printf("TEST: %s\n", str);
@@ -562,12 +535,8 @@ int checkIdent(char *str){
     return(0);
 }
 
-//get rid of whitespace in strings
 char * stringParse(char *pString){
-    //printf("DEBUG1!!%s\n", pString);
     int size = strlen(pString);
-    //printf("Something: %d\n", size);
-    //printf("size: %d\n", size);
     char *newString = malloc(sizeof(char) * (size + 1));
     int j = 0;
     int spaceCount = 0;
@@ -578,8 +547,6 @@ char * stringParse(char *pString){
             newString[i-j] = pString[i];
             spaceCount = 0;
             countValid++;
-            //printf("Added: %c\n", pString[i]);
-            //printf("NewString: %s\n", newString);
     }
     else if((spaceCount == 0) && (countValid > 0)){
         newString[i-j] = pString[i];
@@ -593,7 +560,6 @@ char * stringParse(char *pString){
     return(newString);
 }
 
-//prompt user for the first time
 void introInstruct(){
     char hold;
     printf("Hello! This app is inspired by Dr. K's talk about turning w's into l's (https://twitter.com/HealthyGamerGG/status/1615857210638180353?s=200).\n This app is designed to help you keep track of your w's and put them in your respective \"column\"! \n");
@@ -606,7 +572,6 @@ void introInstruct(){
     system("cls");
 }
 
-//check if user is a returning user (0 = false);
 int checkReturnUser(){
     char ans;
     printf("Are you a returning user? (T/F)\n");
@@ -619,7 +584,6 @@ int checkReturnUser(){
     }
     }
 
-//get dir of W's
 char *getDir(){
     char *hold = malloc(sizeof(char) * 160);
     printf("What is the file path to where your W's are held?\n");
@@ -667,17 +631,13 @@ dllist loadWs(FILE *fp){
                 
                     scanf(" %d", &hold);
                         if(hold == 1){
-                            //here it has it 
-                            //printf("DIR CHECK: %s\n", dir);
                             if(!checkText(dir)){
-                                //printf("if\n\n");
                                 fclose(fp);
                                 fp = fopen(textAdd(dir), "w");
                                 strcpy(currentFilePath, textAdd(dir));
                             }
                             
                             else{
-                                //printf("else\n\n");
                                 fclose(fp);
                                 fp = fopen(dir, "w");
                                 strcpy(currentFilePath, dir);
@@ -699,13 +659,11 @@ dllist loadWs(FILE *fp){
                     printf("File is empty \n");
                     continue;
                 }
-
                 else{
                     fclose(fp);
                     fp = fopen(dir, "a+");
                     strcpy(currentFilePath, dir);
                     dllist d = initList();
-                    //printf("test: %d\n", fp==NULL);
                     char* sTemp = malloc(sizeof(char) * 81);
                         while(1){
                         fgets(sTemp, LSIZE, fp);
@@ -725,9 +683,9 @@ dllist loadWs(FILE *fp){
         return(d);
                 }
             }
-            else{
+            else{ 
                 int grubbyHandGrabber; 
-                grubbyHandGrabber = invalFilePrompt();
+                grubbyHandGrabber = invalFilePrompt(); 
                 if(grubbyHandGrabber == 1){
                     if(!checkText(dir)){
                                 fclose(fp);
@@ -738,7 +696,6 @@ dllist loadWs(FILE *fp){
                             fprintf(fp,"~W Column App By LovePengy~\n");
                             return(d);
                 }
-
                 else if(grubbyHandGrabber == 2){
                     fp = fopen("wcolhold.txt", "w");
                     strcpy(currentFilePath, "wcolhold.txt");
@@ -761,13 +718,12 @@ dllist loadWs(FILE *fp){
             return(d);
         }
         if(checkIdent(strChecker2) && (size != 0)){
-            //need to go through and load up the W's
             dllist d = initList();
             char* sTemp = malloc(sizeof(char) * 81);
-            fgets(sTemp, 80, fp);
+            rewind(fp);
+            fgets(sTemp, 80, fp); 
             sTemp = malloc(sizeof(char) * 81);
             while(1){
-                //printf("here\n");
                 fgets(sTemp, 80, fp);
                 sTemp = trailingNLDestroyer(sTemp);
                 if(feof(fp)){
@@ -794,9 +750,13 @@ return(NULL);
 
 void dumpWs(dllist dl, FILE * fp){
         fclose(fp);
+        printf("TEST: %s\n", currentFilePath); 
         fp = fopen(currentFilePath, "w");  
-        for(int i = 0; i < listSize(dl); i++){
-                fprintf(fp, "%s\n", getItemAtIndex(dl, i+1));
+        fprintf(fp, "~W Column App By LovePengy~\n");
+        if(listSize(dl) != 0){
+            for(int i = 1; i < (listSize(dl)+1); i++){
+                    fprintf(fp, "%s\n", getItemAtIndex(dl, i));
+            }
         }
 }
 
@@ -811,19 +771,15 @@ int main(void){
     consoleEscapeCodeSetup();
     //hides cursor
     printf("\e[?25l");
-    //to reenable it use printf("\e[?25h");
-    //sets random seed to a random value 
     srand(time(NULL));
     introInstruct();
     FILE* fptr;
     fptr = fopen("wcolhold.txt", "a+");
-    
-    //a+ opens file for both reading and appending d
+    strcpy(currentFilePath, "wcolhold.txt");
     dllist wList = loadWs(fptr);
     originalWs = listSize(wList);    
     userInputAction(wList);
     system("cls");
-    //printList(wList);
     printf("The amount of W's this session was: %d\n", getSessionCount(wList, originalWs)); 
     printf("This means you have %d total W's!\n", getTotalCount(wList));
     printf("\e[?25h");

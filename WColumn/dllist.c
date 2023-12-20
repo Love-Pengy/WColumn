@@ -15,7 +15,6 @@ struct header{
 };
 typedef struct header *dllist;
 
-//initiallizes doubly linked list 
 dllist initList(){
     dllist new = malloc(sizeof(struct header));
     new->head = NULL;
@@ -41,9 +40,7 @@ int listSize(dllist dl){
     return(dl->size);
 }
 
-//take string and header node and insert string into dllist at end
 dllist addList(char *str, dllist dl){
-    //if there are no nodes create one and set it as head
     if(strcmp(str, "") == 0){
         printf("ADDLIST PASSED NULL STRING\n");
         return(NULL);
@@ -53,16 +50,13 @@ dllist addList(char *str, dllist dl){
         dl->size = 1;
         return(dl);
     }
-    //if there is just a head then create node and put it after the head
     else if(dl->size == 1){
-        //printf("here\n");
         dl->tail = createNode(str);
         dl->head->next = dl->tail;
         dl->tail->prev = dl->head;
         dl->size++;
         return(dl);
     }
-    //if dllist is already created then add node at the end like normal 
     else{
         dlNode tmp; 
         tmp = dl->tail; 
@@ -120,9 +114,8 @@ void printList(dllist d){
         printf("%s}\n", ptr->data);
     }
 }
-//delete item at index specified. STARTS AT 1
+
 void removeAtIndex(dllist list, int index){
-    //if list is empty 
     if(list == NULL){
         printf("deleteItem passed NULL dllist\n");
     }
@@ -132,7 +125,6 @@ void removeAtIndex(dllist list, int index){
     else if(listSize(list) == 1){
         clearList(list);
     }
-    //if removing head node
     else if(index == 1){
         dlNode newHead = list->head->next;
         free(list->head);
@@ -161,7 +153,6 @@ void removeAtIndex(dllist list, int index){
     }
 }
 
-//Add item at index specified. STARTS AT 1
 void replaceAtIndex(dllist list, int index, char* string){
     if((index > listSize(list)) || (index < 1)){
         printf("addAtIndex passed invalid index\n");
@@ -184,7 +175,6 @@ void replaceAtIndex(dllist list, int index, char* string){
     }
 }
 
-//get item at specified index. STARTS AT 1
 char * getItemAtIndex(dllist list, int index){
     if((index < 1) || (index > listSize(list))){
         printf("getItemAtIndex passed invalid index: %d", index);
